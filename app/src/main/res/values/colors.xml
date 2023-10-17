@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="GreyBg">#575656</color>
+    <color name="darkGreyHeader">#3A3A3A</color>
+    <color name="PlayButtonColor">#4B21EA</color>
 </resources>

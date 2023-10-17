@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "663429830098",
+    "project_id": "thebasement-ffbe6",
+    "storage_bucket": "thebasement-ffbe6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663429830098:android:5df53fa266c3b75812e40b",
+        "android_client_info": {
+          "package_name": "com.example.thebasementpart3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRX0TDSOjeSbKF0ye2oeDJxjQnwX0oSxw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
