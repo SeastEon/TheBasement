@@ -2,16 +2,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/MainLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:background="@drawable/greybricks">
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/PurpleNavColor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:background="@drawable/navbuttons"
+                android:src="@drawable/baseline_east_24" />
+
+            <Space
+                android:layout_width="220dp"
+                android:layout_height="1dp" />
+
+            <ImageButton
+                android:id="@+id/ExportTodataBase"
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:background="@drawable/navbuttons"
+                android:src="@drawable/upload" />
+
+            <ImageButton
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:background="@drawable/navbuttons"
+                android:src="@drawable/trash" />
+        </LinearLayout>
+
+
+    </com.google.android.material.navigation.NavigationView>
 
     <ScrollView
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="60dp"
         android:layout_width="350dp"
-        android:layout_height="600dp"
+        android:layout_height="580dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -25,6 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Basement Words Go Here"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
@@ -34,16 +73,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="35dp"
-        >
-
-        <Button
-            android:id="@+id/ExportTodataBase"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Export to Basement"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginLeft="35dp">
 
         <Button
             android:id="@+id/OpenRecordAudioDialogBtn"
@@ -55,4 +85,37 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
     </LinearLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/PurpleNavColor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageButton
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:background="@drawable/navbuttons"
+                android:src="@drawable/baseline_east_24" />
+
+            <Space
+                android:layout_width="220dp"
+                android:layout_height="1dp" />
+
+            <ImageButton
+                android:layout_width="60dp"
+                android:layout_height="50dp"
+                android:background="@drawable/navbuttons"
+                android:src="@drawable/upload" />
+
+            <ImageButton
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:background="@drawable/navbuttons"
+                android:src="@drawable/trash" />
+        </LinearLayout>
+    </com.google.android.material.navigation.NavigationView>
 </LinearLayout>

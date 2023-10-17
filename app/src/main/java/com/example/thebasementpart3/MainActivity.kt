@@ -4,9 +4,12 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.api.Distribution.BucketOptions.Linear
 
 
 class MainActivity : AppCompatActivity() {
@@ -15,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val exportBtn = findViewById<Button>(R.id.ExportTodataBase)
+        val exportBtn = findViewById<ImageButton>(R.id.ExportTodataBase)
         exportBtn.setOnClickListener {
             val baseMTObj = BasementObject(findViewById<Button>(R.id.TxtVMainBasememnt))// we create our basement Object
             db.addBasementToDatabase(baseMTObj)
