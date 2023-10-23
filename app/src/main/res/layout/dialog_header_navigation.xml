@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="180dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_alignParentLeft="true"
+    android:background="@color/darkGreyHeader">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/PurpleNavColor">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Headers"
+        android:textAlignment="center"
+        android:textSize="35dp"
+        android:background="@color/PurpleNavColor"
+        android:textColor="@color/white" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/ExitHeaderNavigation"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="20dp"
+            android:foreground="@drawable/baseline_east_24"
+            android:background="@color/PurpleNavColor" />
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="660dp"
+        android:orientation="vertical"
+        android:background="@color/GreyBg">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="620dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/HeaderNavigationScrollLayouut"
+                android:orientation="vertical"/>
+        </ScrollView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="hint: headers are created after two newlines"
+            android:textColor="@color/white"
+            />
+    </LinearLayout>
+</LinearLayout>

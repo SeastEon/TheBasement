@@ -44,12 +44,12 @@ class AudioConfig (var mainActivity: Activity): AppCompatActivity() {
     private var player: MediaPlayer? = null
     //Allows us to prompt the user to record audio
     fun CreateAudioDialog(){
-        var alertBuilder = AlertDialog.Builder(mainActivity)
-        var dialogView: View = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_record_audio, null)
+
+        val ScrollViewLinearLayout = mainActivity.findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
+        val dialogView =  LayoutInflater.from(mainActivity).inflate(R.layout.dialog_record_audio, null)
+        ScrollViewLinearLayout.addView(dialogView)
         var EditTetRedordName = dialogView.findViewById<EditText>(R.id.TextRecording)
         var AudioName = EditTetRedordName.text.toString()
-
-        alertBuilder.setView(dialogView)
 
         var RecordBtn = dialogView.findViewById<ToggleButton>(R.id.RecordBtn)
         RecordBtn.setOnCheckedChangeListener { _, isChecked ->
@@ -63,9 +63,6 @@ class AudioConfig (var mainActivity: Activity): AppCompatActivity() {
                 CreatePlayBackAudioBox(AudioName)
             }
         }
-
-        var dialogAlert = alertBuilder.create()
-        dialogAlert.show()
     }
 
     fun StartRecording(FileName:String) {
@@ -107,7 +104,7 @@ class AudioConfig (var mainActivity: Activity): AppCompatActivity() {
 
     //Creates the play back button
     fun CreatePlayBackAudioBox(GivenfileName:String) {
-        var MainScrollBarLinearLayout =mainActivity.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout) //creates an object we can use to access the linear layout
+        var MainScrollBarLinearLayout = mainActivity.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout) //creates an object we can use to access the linear layout
 
         var playBarsHolder = LinearLayout(mainActivity)
         playBarsHolder.orientation = LinearLayout.VERTICAL
@@ -153,7 +150,7 @@ class AudioConfig (var mainActivity: Activity): AppCompatActivity() {
                 setDataSource(fileName)
                 prepare()
                 start()
-            } catch (e: IOException) { Toast.makeText(mainActivity, "Failed" + e.toString(), Toast.LENGTH_SHORT).show() }
+            } catch (e: IOException) { Toast.makeText(mainActivity, "To be implemented", Toast.LENGTH_SHORT).show() }
         }
     }
 

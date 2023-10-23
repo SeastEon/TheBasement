@@ -1,121 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/MainLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/greybricks"
     android:orientation="vertical"
-    tools:context=".MainActivity"
-    android:background="@drawable/greybricks">
+    tools:context=".MainActivity">
 
-    <com.google.android.material.navigation.NavigationView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/PurpleNavColor">
-
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageButton
+            android:layout_height="match_parent"
+            android:background="@color/PurpleNavColor">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/OpenHeaderNavigation"
                 android:layout_width="60dp"
                 android:layout_height="50dp"
-                android:background="@drawable/navbuttons"
-                android:src="@drawable/baseline_east_24" />
-
+                android:background="@drawable/baseline_east_24"
+                android:backgroundTint="@color/white" />
             <Space
                 android:layout_width="220dp"
                 android:layout_height="1dp" />
-
-            <ImageButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/ExportTodataBase"
                 android:layout_width="60dp"
                 android:layout_height="50dp"
-                android:background="@drawable/navbuttons"
-                android:src="@drawable/upload" />
-
-            <ImageButton
-                android:layout_width="70dp"
+                android:background="@drawable/upload"
+                android:backgroundTint="@color/white"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/EraseBasement"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/navbuttons"
-                android:src="@drawable/trash" />
+                android:background="@drawable/trash"
+                android:backgroundTint="#FF0000" />
         </LinearLayout>
 
-
-    </com.google.android.material.navigation.NavigationView>
-
-    <ScrollView
-        android:layout_width="350dp"
-        android:layout_height="580dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/BasementScrollLinearLayout"
-            android:layout_width="match_parent"
+        <ScrollView
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
             android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/TxtVMainBasememnt"
+            <LinearLayout
+                android:id="@+id/BasementScrollLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Basement Words Go Here"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </LinearLayout>
-
-    </ScrollView>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="35dp">
-
-        <Button
-            android:id="@+id/OpenRecordAudioDialogBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="Reocrd Audio"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+                android:orientation="vertical">
+                <EditText
+                    android:id="@+id/TxtVMainBasememnt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Basement Words Go Here"
+                    android:textColor="@color/white"
+                    android:background="@color/GreyBg"/>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
-    <com.google.android.material.navigation.NavigationView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/PurpleNavColor">
-
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
         <LinearLayout
+            android:id="@+id/BottomScrollViewLinearLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageButton
-                android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/PurpleNavColor">
+            <LinearLayout
+                android:id="@+id/FirestBottomLayoutBar"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/navbuttons"
-                android:src="@drawable/baseline_east_24" />
+                android:orientation="horizontal">
+                <Space
+                    android:layout_width="25dp"
+                    android:layout_height="1dp" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/OpenGridDialouge"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/grid"
+                    android:backgroundTint="@color/white"/>
+                <Space
+                    android:layout_width="55dp"
+                    android:layout_height="1dp" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/TextFormatter"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/text_format"
+                    android:backgroundTint="@color/white"/>
+                <Space
+                    android:layout_width="55dp"
+                    android:layout_height="1dp" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/cameraBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/camera"
+                    android:backgroundTint="@color/white" />
+                <Space
+                    android:layout_width="55dp"
+                    android:layout_height="1dp" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/OpenRecordAudioDialogBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/mic"
+                    android:backgroundTint="@color/white" />
+            </LinearLayout>
 
-            <Space
-                android:layout_width="220dp"
-                android:layout_height="1dp" />
-
-            <ImageButton
-                android:layout_width="60dp"
-                android:layout_height="50dp"
-                android:background="@drawable/navbuttons"
-                android:src="@drawable/upload" />
-
-            <ImageButton
-                android:layout_width="70dp"
-                android:layout_height="50dp"
-                android:background="@drawable/navbuttons"
-                android:src="@drawable/trash" />
+            <LinearLayout
+                android:id="@+id/SecondBottomLayoutBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/addTextTxtView"
+                    android:layout_width="340dp"
+                    android:layout_height="40dp"
+                    android:text="    Enter Text Here"
+                    android:textColor="@color/white"
+                    android:background="@drawable/text_adder" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/AddTextBtn"
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/add"
+                    />
+            </LinearLayout>
         </LinearLayout>
-    </com.google.android.material.navigation.NavigationView>
-</LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -7,4 +7,5 @@
     <color name="darkGreyHeader">#3A3A3A</color>
     <color name="PlayButtonColor">#4B21EA</color>
     <color name="PurpleNavColor">#372287</color>
+    <color name="LightGrey">#B9B9B9</color>
 </resources>

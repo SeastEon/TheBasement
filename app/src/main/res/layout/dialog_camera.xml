@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:background="@color/darkGreyHeader"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/darkGreyHeader"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pictures and videos"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:background="@color/GreyBg">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/TakePictureBtn"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/GreyBg"
+            android:outlineSpotShadowColor="@color/darkGreyHeader"
+            android:text="Take Picture"
+            android:elevation="10dp"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/TakeVideoBtn"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/GreyBg"
+            android:outlineSpotShadowColor="@color/darkGreyHeader"
+            android:text="Take Video"
+            android:elevation="10dp"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/SelectVideoOrPictureBtn"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/GreyBg"
+            android:outlineSpotShadowColor="@color/darkGreyHeader"
+            android:text="Select Pictures or Videos"
+            android:elevation="10dp"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

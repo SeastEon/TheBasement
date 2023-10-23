@@ -1,3 +1,48 @@
 <resources>
     <string name="app_name">TheBasementPart3</string>
+    <string-array name="Fonts">
+        <item>architectural</item>
+        <item>arial</item>
+        <item>futura</item>
+        <item>helvetica</item>
+        <item>palatino</item>
+        <item>optima</item>
+        <item>kabel</item>
+        <item>roffe</item>
+    </string-array>
+
+    <string-array name="FontSizes">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>10</item>
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>24</item>
+        <item>30</item>
+        <item>36</item>
+        <item>48</item>
+        <item>60</item>
+        <item>72</item>
+    </string-array>
+
+    <string-array name="CellSizes">
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+    <item>5</item>
+    <item>6</item>
+    <item>7</item>
+    <item>8</item>
+    <item>10</item>
+    </string-array>
+
 </resources>
