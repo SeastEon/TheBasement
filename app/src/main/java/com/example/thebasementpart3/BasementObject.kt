@@ -96,12 +96,9 @@ class BasementObject(val basementTextView: TextView, var maincontext:Activity) {
             var EndText = false; var EndHeader = false //these booleans tell us when the
 
             while (EndHeader != true && EndText != true) {
-
                 //these variblies are used to decide where we need to delete the recorded text
-                var HeaderHolder =
-                    CombinedHeaderAndtext.BasementHeader.substringBefore("<basementSeparator>")
-                var TextHolder =
-                    CombinedHeaderAndtext.basementText.substringBefore("<basementSeparator>")
+                var HeaderHolder = CombinedHeaderAndtext.BasementHeader.substringBefore("<basementSeparator>")
+                var TextHolder = CombinedHeaderAndtext.basementText.substringBefore("<basementSeparator>")
 
                 if (!EndHeader) {
                     var HeaderIteratorVal = HeaderHolder.length + "<basementSeparator>".length

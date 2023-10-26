@@ -11,16 +11,7 @@
         <item>roffe</item>
     </string-array>
 
-    <string-array name="FontSizes">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>10</item>
+    <integer-array name="FontSizes">
         <item>12</item>
         <item>14</item>
         <item>16</item>
@@ -31,7 +22,16 @@
         <item>48</item>
         <item>60</item>
         <item>72</item>
-    </string-array>
+        <item>84</item>
+        <item>96</item>
+        <item>118</item>
+        <item>130</item>
+        <item>142</item>
+        <item>154</item>
+        <item>164</item>
+        <item>176</item>
+        <item>188</item>
+    </integer-array>
 
     <string-array name="CellSizes">
     <item>1</item>

@@ -1,16 +1,26 @@
 package com.example.thebasementpart3
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
+import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
 
 
 class MainActivity : AppCompatActivity() {
+    val REQUEST_IMAGE_CAPTURE = 1
+    val REQUEST_VIDEO_CAPTURE = 2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)        // var BasementId = UUID.randomUUID().toString()
@@ -73,5 +83,27 @@ class MainActivity : AppCompatActivity() {
 
     fun MainTextClick(Bottomlayout:LinearLayout, WhichTextSelected:String){
         if (Bottomlayout.childCount > 2 ){ Bottomlayout.removeViewAt(2) }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        var camaraConfig = CameraConfig(this)
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            camaraConfig.AddPicture(imageBitmap)
+        }
+        else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+            val videoUri = data?.data
+            if (videoUri != null) {
+                val videoUri: Uri? = intent.data
+                var videoView = VideoView(this)
+                videoView.setVideoURI(videoUri)
+                camaraConfig.AddVideo(videoView)
+            }
+            else{
+                Toast.makeText(this, "Video not loaded", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

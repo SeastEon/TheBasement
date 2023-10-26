@@ -42,6 +42,7 @@ class AudioConfig (var mainActivity: Activity): AppCompatActivity() {
     private var fileName: String = ""
     private var recorder: MediaRecorder? = null
     private var player: MediaPlayer? = null
+
     //Allows us to prompt the user to record audio
     fun CreateAudioDialog(){
 
@@ -136,7 +137,6 @@ class AudioConfig (var mainActivity: Activity): AppCompatActivity() {
                 stopPlaying()
             }
         }
-
         playBarsHolder.addView(PlayButtonHolderText)
         playBars.addView(playAndPauseButton)
         playBars.addView(PressToPlayAudio)
