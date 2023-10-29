@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">TheBasementPart3</string>
+    <string name="allows_the_user_to_type_data_to_the_main_text">Allows the user to type data to the main text</string>
+    <string name="opens_the_headers_navigation">Opens the Headers Navigation</string>
+    <string name="allows_the_user_to_take_pictures_or_videos">Allows the user to take pictures or videos</string>
+    <string name="holds_the_text_segments_of_the_basement">Holds the Text segments of the Basement</string>
+    <string name="allows_user_to_share_their_basement_code">Allows user to share their Basement Code</string>
+
     <string-array name="Fonts">
         <item>architectural</item>
         <item>arial</item>
@@ -11,7 +17,7 @@
         <item>roffe</item>
     </string-array>
 
-    <integer-array name="FontSizes">
+    <string-array name="FontSizes">
         <item>12</item>
         <item>14</item>
         <item>16</item>
@@ -31,7 +37,7 @@
         <item>164</item>
         <item>176</item>
         <item>188</item>
-    </integer-array>
+    </string-array>
 
     <string-array name="CellSizes">
     <item>1</item>

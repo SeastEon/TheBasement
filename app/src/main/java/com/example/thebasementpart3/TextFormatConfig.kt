@@ -2,91 +2,84 @@ package com.example.thebasementpart3
 
 import android.app.Activity
 import android.graphics.Typeface
-import android.icu.lang.UProperty.INT_START
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.style.RelativeSizeSpan
 import android.text.style.StrikethroughSpan
 import android.text.style.StyleSpan
 import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.get
 
+class TextFormatConfig(private var mainActivity: Activity) {
+    val textBox: TextView = mainActivity.findViewById<TextView>(R.id.addTextTxtView)
+    fun createTextFormatDialog() {
+        val scrollViewLinearLayout =
+            mainActivity.findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
+        val dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_text_edit, null)
+        scrollViewLinearLayout.addView(dialogView)
 
-class TextFormatConfig(var mainActivity: Activity) {
-    val TextBox = mainActivity.findViewById<EditText>(R.id.TxtVMainBasememnt)
-    fun CreatetextFormatDialog() {
-       val ScrollViewLinearLayout = mainActivity.findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
-        val dialogView =  LayoutInflater.from(mainActivity).inflate(R.layout.dialog_text_edit, null)
-        ScrollViewLinearLayout.addView(dialogView)
-
-        val BoldBtn = dialogView.findViewById<Button>(R.id.Boldbtn)
-        BoldBtn.setOnClickListener {
-            EditTextSelection("Bold")
+        val boldBtn = dialogView.findViewById<Button>(R.id.Boldbtn)
+        boldBtn.setOnClickListener {
+            editTextSelection("Bold")
         }
         val italicBtn = dialogView.findViewById<Button>(R.id.Italicbtn)
         italicBtn.setOnClickListener {
-            EditTextSelection("Italic")
+            editTextSelection("Italic")
         }
-        val UnderlineBtn = dialogView.findViewById<Button>(R.id.Underline)
-        UnderlineBtn.setOnClickListener {
-            EditTextSelection("Underline")
+        val underlineBtn = dialogView.findViewById<Button>(R.id.Underline)
+        underlineBtn.setOnClickListener {
+            editTextSelection("Underline")
         }
-        val StrikeThroughBtn = dialogView.findViewById<Button>(R.id.StrikeThrough)
-        StrikeThroughBtn.setOnClickListener {
-            EditTextSelection("StrikeThrough")
+        val strikeThroughBtn = dialogView.findViewById<Button>(R.id.StrikeThrough)
+        strikeThroughBtn.setOnClickListener {
+            editTextSelection("StrikeThrough")
         }
 
         val textSizeSpinner = dialogView.findViewById<Spinner>(R.id.TextSizeSpinner)
-        ArrayAdapter.createFromResource(mainActivity, R.array.FontSizes, android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            textSizeSpinner.adapter = adapter
-        }
         textSizeSpinner.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                TextBox.textSize = textSizeSpinner.selectedItem.toString().toFloat()
+                if (textSizeSpinner.selectedItem != null) {updateTextSize(textSizeSpinner.selectedItem.toString().toFloat() / 12)}
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
             }//implement function here
         }
-        val FontSpinner = dialogView.findViewById<Spinner>(R.id.FontSpinner)
-        ArrayAdapter.createFromResource(mainActivity, R.array.Fonts, android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            FontSpinner.adapter = adapter
-        }
-        FontSpinner.onItemSelectedListener = object :
+
+        val fontSpinner = dialogView.findViewById<Spinner>(R.id.FontSpinner)
+        fontSpinner.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {} //implement function here
             override fun onNothingSelected(parent: AdapterView<*>) {}//implement function here
         }
     }
 
-    fun EditTextSelection(selection:String){
-        val startSelection: Int = TextBox.selectionStart
-        val endSelection: Int = TextBox.selectionEnd
-        val str = SpannableStringBuilder(TextBox.text)
-
+    private fun editTextSelection(selection: String) {
+        val startSelection: Int = textBox.selectionStart
+        val endSelection: Int = textBox.selectionEnd
+        val str = SpannableStringBuilder(textBox.text)
         when (selection) {
-            "Bold" ->{  str.setSpan(StyleSpan(Typeface.BOLD), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
-            "Italic" ->{ str.setSpan(StyleSpan(Typeface.ITALIC), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
-            "Underline" ->{ str.setSpan(UnderlineSpan(), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
-            "StrikeThrough" ->{ str.setSpan(StrikethroughSpan(), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
+            "Bold" -> { str.setSpan(StyleSpan(Typeface.BOLD), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+            "Italic" -> { str.setSpan(StyleSpan(Typeface.ITALIC), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+            "Underline" -> { str.setSpan(UnderlineSpan(), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+            "StrikeThrough" -> { str.setSpan(StrikethroughSpan(), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
         }
-        TextBox.text = str
     }
 
-    fun FontChange(fontName:String){
-
+    private fun updateTextSize(Size: Float) {
+        val startSelection: Int = textBox.selectionStart
+        val endSelection: Int = textBox.selectionEnd
+        if (textBox.text != "") {
+            val str = SpannableStringBuilder(textBox.text)
+            if (str.isNotEmpty()) {
+                str.setSpan(RelativeSizeSpan(Size), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textBox.text = str
+            }
+        }
     }
 }

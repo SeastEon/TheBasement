@@ -1,79 +1,115 @@
 package com.example.thebasementpart3
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.TextView
 import android.widget.Toast
 import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
+import java.util.Timer
+import kotlin.concurrent.timerTask
 
 
 class MainActivity : AppCompatActivity() {
-    val REQUEST_IMAGE_CAPTURE = 1
-    val REQUEST_VIDEO_CAPTURE = 2
+    private val requestImageCapture = 1
+    private val requestVideoCapture = 2
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)        // var BasementId = UUID.randomUUID().toString()
-        var Bottomlayout = findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
-        var MainText = findViewById<EditText>(R.id.TxtVMainBasememnt)
-        MainText.background.alpha = 150
+        setContentView(R.layout.activity_main)
 
-        var BaseMTObj = BasementObject(findViewById<EditText>(R.id.TxtVMainBasememnt), this)
-        val db = DataBase(this, BaseMTObj) //the database is initialized using the main context to display successes or failures
+        // var BasementId = UUID.randomUUID().toString()
+        val bottomLayout = findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
 
-        db.GetBasementFromDatabase()
-        BaseMTObj.SetTextBox(BaseMTObj.SetBasementText(db.ReturnedDoc))
+        var baseMTObj = BasementObject(this)
+        val db = DataBase(
+            this,
+            baseMTObj
+        ) //the database is initialized using the main context to display successes or failures
 
-        val exportBtn = findViewById<Button>(R.id.ExportTodataBase)
+        db.getBasementFromDatabase()
+        baseMTObj.setTextBox(baseMTObj.setBasementText(db.returnedDoc))
+
+        val exportBtn = findViewById<Button>(R.id.ExportToDataBaseBtn)
         exportBtn.setOnClickListener {
-            BaseMTObj = BasementObject(findViewById<EditText>(R.id.TxtVMainBasememnt), this) //resets the textbox to the text inside before using
-            db.addBasementToDatabase(BaseMTObj)
+            baseMTObj = BasementObject(this) //resets the textBox to the text inside before using
+            db.addBasementToDatabase(baseMTObj)
         }
 
-        MainText.setOnClickListener{ MainTextClick(Bottomlayout, "Main") }
+        val secondaryEditText = findViewById<EditText>(R.id.addTextTxtView)
+        secondaryEditText.setOnClickListener { mainTextClick(bottomLayout) }
 
-        val SecondaryText = findViewById<EditText>(R.id.addTextTxtView)
-        SecondaryText.setOnClickListener{MainTextClick(Bottomlayout, "")}
+        val eraseBasementBtn = findViewById<Button>(R.id.EraseBasement)
+        eraseBasementBtn.setOnClickListener { } // clear Basement needs to be overhauled
 
-        val eraseBasement = findViewById<Button>(R.id.EraseBasement)
-        eraseBasement.setOnClickListener{ db.ClearBasementDialog(MainText) }
+        val openHeaderNavigationBtn = findViewById<Button>(R.id.OpenHeaderNavigation)
+        openHeaderNavigationBtn.setOnClickListener { BasementObject(this).headerNav.startUpHeader() }
 
-        val OpenHeaderNavigation = findViewById<Button>(R.id.OpenHeaderNavigation)
-        OpenHeaderNavigation.setOnClickListener { BasementObject(findViewById<Button>(R.id.TxtVMainBasememnt), this).HeaderNav.StartUpHeader() }
+        val openRecordDialogBtn = findViewById<Button>(R.id.OpenRecordAudioDialogBtn)
+        openRecordDialogBtn.setOnClickListener {
+            callBottomLinearLayoutFunctions(
+                "RecordAudio",
+                bottomLayout
+            )
+        }
 
-        val openRecordDialog = findViewById<Button>(R.id.OpenRecordAudioDialogBtn)
-        openRecordDialog.setOnClickListener{ CallBottomLinearLayoutFunctions("RecordAudio", Bottomlayout) }
+        val openCameraBtn = findViewById<Button>(R.id.cameraBtn)
+        openCameraBtn.setOnClickListener { callBottomLinearLayoutFunctions("Camera", bottomLayout) }
 
-        val OpenCamera= findViewById<Button>(R.id.cameraBtn)
-        OpenCamera.setOnClickListener{ CallBottomLinearLayoutFunctions("Camera", Bottomlayout) }
+        val openTextFormattedBtn = findViewById<Button>(R.id.TextFormatter)
+        openTextFormattedBtn.setOnClickListener {
+            callBottomLinearLayoutFunctions(
+                "TextFormatter",
+                bottomLayout
+            )
+        }
 
-        val OpenTextFormatted = findViewById<Button>(R.id.TextFormatter)
-        OpenTextFormatted.setOnClickListener{ CallBottomLinearLayoutFunctions("TextFormatter", Bottomlayout) }
+        val openGridCreationBtn = findViewById<Button>(R.id.OpenGridDialogBtn)
+        openGridCreationBtn.setOnClickListener {
+            callBottomLinearLayoutFunctions(
+                "CreateCells",
+                bottomLayout
+            )
+        }
 
-        val OpenGridCreation = findViewById<Button>(R.id.OpenGridDialouge)
-        OpenGridCreation.setOnClickListener{ CallBottomLinearLayoutFunctions("CreateCells", Bottomlayout) }
+        val textAdderBtn = findViewById<Button>(R.id.AddTextBtn)
+        textAdderBtn.setOnClickListener {
+            val RadioTime = findViewById<RadioButton>(R.id.RadioTimeBtn)
+            val RadioHeader = findViewById<RadioButton>(R.id.RadioHeaderBtn)
 
-        val TextAdderBtn = findViewById<Button>(R.id.AddTextBtn)
-        TextAdderBtn.setOnClickListener{ BasementObject(findViewById<Button>(R.id.TxtVMainBasememnt), this).TextAdded() }
+            if(RadioTime.isChecked){
+                baseMTObj.SetText()
+                RadioTime.isChecked = false
+            }//Do Nothing yet. Will allow the user to set a notification for later
+            else if(RadioHeader.isChecked){
+                baseMTObj.SetHeader()
+                RadioHeader.isChecked = false
+            }
+            else{baseMTObj.SetText() }
+            baseMTObj = BasementObject(this)
+            db.addBasementToDatabase(baseMTObj)
+        }
     }
 
-    fun CallBottomLinearLayoutFunctions(FunctionToCall:String, Bottomlayout:LinearLayout){
-        if(Bottomlayout.childCount >= 3){ Bottomlayout.removeViewAt(2) }
+    private fun callBottomLinearLayoutFunctions(FunctionToCall:String, bottomLayout:LinearLayout){
+        if(bottomLayout.childCount >= 2){ bottomLayout.removeViewAt(1) }
         when (FunctionToCall) {
             "RecordAudio" -> {AudioConfig(this).CreateAudioDialog()}
-            "Camera" -> { CameraConfig(this).CreatecameraDialouge() }
-            "TextFormatter" -> { TextFormatConfig(this).CreatetextFormatDialog() }
-            "CreateCells" -> {CreateCell(this).CreateGridDialouge()}
+            "Camera" -> { CameraConfig(this).createCameraDialog() }
+            "TextFormatter" -> { TextFormatConfig(this).createTextFormatDialog() }
+            "CreateCells" -> {CreateCell(this).createGridDialog()}
         }
         this.currentFocus?.let { view ->
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -81,25 +117,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun MainTextClick(Bottomlayout:LinearLayout, WhichTextSelected:String){
-        if (Bottomlayout.childCount > 2 ){ Bottomlayout.removeViewAt(2) }
+    private fun mainTextClick(bottomLayout:LinearLayout){
+        if (bottomLayout.childCount > 1 ){ bottomLayout.removeViewAt(1) }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        var camaraConfig = CameraConfig(this)
+        val camaraConfig = CameraConfig(this)
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == requestImageCapture && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            camaraConfig.AddPicture(imageBitmap)
+            camaraConfig.addPicture(imageBitmap)
         }
-        else if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
+        else if (requestCode == requestVideoCapture && resultCode == RESULT_OK) {
             val videoUri = data?.data
             if (videoUri != null) {
-                val videoUri: Uri? = intent.data
-                var videoView = VideoView(this)
-                videoView.setVideoURI(videoUri)
-                camaraConfig.AddVideo(videoView)
+                val videoView = VideoView(this)
+                videoView.setVideoURI(intent.data)
+                camaraConfig.addVideo(videoView)
             }
             else{
                 Toast.makeText(this, "Video not loaded", Toast.LENGTH_SHORT).show()

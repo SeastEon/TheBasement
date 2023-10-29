@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/TextFormatterLinearlayout"
     android:layout_width="match_parent"
-    android:layout_height="190dp"
+    android:layout_height="150dp"
     android:background="@color/darkGreyHeader"
     android:orientation="vertical">
 
@@ -22,7 +22,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="140dp"
+        android:layout_height="120dp"
         android:orientation="vertical"
         android:background="@color/GreyBg">
 
@@ -34,52 +34,47 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:text="Size:"
-                android:layout_marginRight="10dp"
+                android:text="Size "
                 android:textSize="20dp"
                 android:textColor="@color/white"
                 />
+
             <Spinner
                 android:id="@+id/TextSizeSpinner"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/light_grey_text_adder"
-                />
+                android:entries="@array/FontSizes" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:text="Font:"
-                android:layout_marginRight="10dp"
+                android:text="Font "
                 android:textSize="20dp"
                 android:textColor="@color/white"
                 />
-
             <Spinner
                 android:id="@+id/FontSpinner"
                 android:layout_width="180dp"
                 android:layout_height="50dp"
-                android:layout_marginRight="10dp"
                 android:background="@drawable/light_grey_text_adder"
-               />
+                android:entries="@array/Fonts" />
         </LinearLayout>
         <Space
             android:layout_width="wrap_content"
             android:layout_height="10dp"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Space
-                android:layout_width="20dp"
+                android:layout_width="10dp"
                 android:layout_height="wrap_content"/>
-
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/Boldbtn"
                 android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                android:background="@color/LightGrey"
                 android:text="B"
                 android:textStyle="bold"
@@ -93,7 +88,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/Italicbtn"
                 android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:background="@color/LightGrey"
                 android:text="I"
                 android:textStyle="italic"
@@ -110,7 +105,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="2dp"
-                    android:layout_marginTop="50dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginLeft="15dp"
                     android:foreground="@color/black"
                     android:background="@color/black"
@@ -120,7 +115,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/Underline"
                 android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_height="50dp"
                 android:background="@color/LightGrey"
                 android:text="U"
                 android:textStyle=""
@@ -137,7 +132,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="2dp"
-                    android:layout_marginTop="35dp"
+                    android:layout_marginTop="25dp"
                     android:layout_marginLeft="15dp"
                     android:foreground="@color/black"
                     android:background="@color/black"
@@ -146,7 +141,7 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/StrikeThrough"
                     android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_height="50dp"
                     android:background="@color/LightGrey"
                     android:text="S"
                     android:textStyle=""

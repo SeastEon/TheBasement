@@ -1,29 +1,28 @@
 package com.example.thebasementpart3
 
 import android.app.Activity
-import android.content.Context
-import android.content.DialogInterface
-import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.Button
+import android.graphics.Typeface
+import android.text.Spannable
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.ScrollView
+import android.widget.Space
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.content.res.AppCompatResources
 import org.w3c.dom.Text
-import java.util.UUID
 import java.util.Vector
 
-class BasementObject(val basementTextView: TextView, var maincontext:Activity) {
+class BasementObject( private var mainContext:Activity) {
+    var BasementString = ""
     var mHeaders =""
     var mText =""
-    var HeaderNav = NavigateHeader(maincontext)
+    var headerNav = NavigateHeader(mainContext)
+    val textAdderTextView =  mainContext.findViewById<TextView>(R.id.addTextTxtView)
 
-    init {//constructs the varibles for the Basement
-        var BasementSections = SeparatebasementHeaders(CreateBasementSections(basementTextView))
-        mHeaders = BasementSections.BasementHeader
-        mText = BasementSections.basementText
+    init {//constructs the variables for the Basement
+        val basementSections = separateBasementHeaders(createBasementSections(BasementString))
+        mHeaders = basementSections.BasementHeader
+        mText = basementSections.basementText
     }
 
     //Holds the Headers and Text for the Basement file
@@ -33,122 +32,139 @@ class BasementObject(val basementTextView: TextView, var maincontext:Activity) {
         var basementText: String
     )
 
-    fun CreateBasementSections(basementtextView:TextView): Vector<BasementSection> {
+    private fun createBasementSections(basementTextView:String): Vector<BasementSection> {
+        val basementText = basementTextView
+        val basementSectionVector = Vector<BasementSection>()
+        val basementTextVector = ""
+        var charRecorder = ""
+        val basementSections = BasementSection("", basementTextVector) //Creates an Empty BasementSection
 
-        val BasementText = basementtextView
-        var BasementSectionVector = Vector<BasementSection>()
-        var BasementTextVector = ""
-        var CharRecorder = ""
-        var BasementSections = BasementSection("", BasementTextVector); //Creates an Empty BasementSection
-
-        for (a in BasementText.text){
-            CharRecorder += a //records the char for every loop
+        for (a in basementText){
+            charRecorder += a //records the char for every loop
             if(a == '\n'){
-                if(BasementSections.BasementHeader == "") {
-                    BasementSections.BasementHeader += CharRecorder //Sets the Header for BasementSection
-                    CharRecorder = ""; //Resets the Character Recorder
+                if(basementSections.BasementHeader == "") {
+                    basementSections.BasementHeader += charRecorder //Sets the Header for BasementSection
+                    charRecorder = "" //Resets the Character Recorder
                 }
 
                 if(a.inc() == '\n') {
-                    BasementSections.basementText += CharRecorder //adds a line of text to the text section of the Section
-                    CharRecorder = "";//Resets the Character Recorder
-                    BasementSectionVector.add(BasementSections);
-                    BasementSections.basementText = ""
-                    BasementSections.BasementHeader = ""
+                    basementSections.basementText += charRecorder //adds a line of text to the text section of the Section
+                    charRecorder = ""//Resets the Character Recorder
+                    basementSectionVector.add(basementSections)
+                    basementSections.basementText = ""
+                    basementSections.BasementHeader = ""
                     while (!a.isLetter()) { a.inc(); }//Skips every char that is not a letter
                 }
             }
         }
-        if(BasementSections.BasementHeader == ""){
-            BasementSections.BasementHeader += CharRecorder;
-        } else if(BasementSections.basementText == ""){
-            BasementSections.basementText += CharRecorder;
+        if(basementSections.BasementHeader == ""){
+            basementSections.BasementHeader += charRecorder
+        } else if(basementSections.basementText == ""){
+            basementSections.basementText += charRecorder
         }
-        BasementSectionVector.add(BasementSections)
-        HeaderNav.BasementSections = BasementSectionVector
-        return HeaderNav.BasementSections
+        basementSectionVector.add(basementSections)
+        headerNav.basementSections = basementSectionVector
+        return headerNav.basementSections
     }
 
-    fun SeparatebasementHeaders(basementSections: Vector<BasementSection>): BasementSection {
-        var BasementHeader = ""
-        var BasementText = ""
-        for (Section in basementSections){
-            BasementHeader = Section.BasementHeader + "<basementSeparator>";
-            BasementText= Section.basementText + "<basementSeparator>";
+    private fun separateBasementHeaders(basementSections: Vector<BasementSection>): BasementSection {
+        var basementHeader = ""
+        var basementText = ""
+        for (Section in basementSections) {
+            basementHeader = Section.BasementHeader + "<basementSeparator>"
+            basementText = Section.basementText + "<basementSeparator>"
         }
-        BasementHeader.drop(BasementHeader.length) //removes the last ","
-        BasementText.drop(BasementText.length)
-        var BasementSections = BasementSection(BasementHeader, BasementText);
+        basementHeader.drop(basementHeader.length) //removes the last ","
+        basementText.drop(basementText.length)
 
-        return BasementSections;
+        return BasementSection(basementHeader, basementText)
     }
 
-    fun SetBasementText(CombinedHeaderAndtext: BasementSection): Vector<BasementSection> {
-        var Separatedbasment = Vector<BasementSection>()
+    fun setBasementText(CombinedHeaderAndText: BasementSection): Vector<BasementSection> {
+        val separatedBasement = Vector<BasementSection>()
 
-        if (CombinedHeaderAndtext.BasementHeader == "<basementSeparator>" || CombinedHeaderAndtext.BasementHeader == ""){
+        if (CombinedHeaderAndText.BasementHeader == "<basementSeparator>" || CombinedHeaderAndText.BasementHeader == ""){
             //We know there is no data in this file
-            Separatedbasment.add(BasementSection("", ""))
-        } else if(CombinedHeaderAndtext.basementText == "<basementSeparator>" ||  CombinedHeaderAndtext.basementText == ""){
+            separatedBasement.add(BasementSection("", ""))
+        } else if(CombinedHeaderAndText.basementText == "<basementSeparator>" ||  CombinedHeaderAndText.basementText == ""){
             // we know there is only a header in this file so we can just add the that element to the vector
-            Separatedbasment.add(BasementSection(CombinedHeaderAndtext.BasementHeader.substringBefore("<basementSeparator>"), ""))
+            separatedBasement.add(BasementSection(CombinedHeaderAndText.BasementHeader.substringBefore("<basementSeparator>"), ""))
         } else {
-            var EndText = false; var EndHeader = false //these booleans tell us when the
+            var endText = false; var endHeader = false //these booleans tell us when the
 
-            while (EndHeader != true && EndText != true) {
-                //these variblies are used to decide where we need to delete the recorded text
-                var HeaderHolder = CombinedHeaderAndtext.BasementHeader.substringBefore("<basementSeparator>")
-                var TextHolder = CombinedHeaderAndtext.basementText.substringBefore("<basementSeparator>")
+            while (!endHeader && !endText) { //these variables are used to decide where we need to delete the recorded text
+                val headerHolder = CombinedHeaderAndText.BasementHeader.substringBefore("<basementSeparator>")
+                val textHolder = CombinedHeaderAndText.basementText.substringBefore("<basementSeparator>")
 
-                if (!EndHeader) {
-                    var HeaderIteratorVal = HeaderHolder.length + "<basementSeparator>".length
-                    CombinedHeaderAndtext.BasementHeader = CombinedHeaderAndtext.BasementHeader.removeRange(0, HeaderIteratorVal)
+                if (!endHeader) {
+                    val headerIteratorVal = headerHolder.length + "<basementSeparator>".length
+                    CombinedHeaderAndText.BasementHeader = CombinedHeaderAndText.BasementHeader.removeRange(0, headerIteratorVal)
                 }
 
-                if (!EndText) {
-                    var TextIteratorVal = TextHolder.length + "<basementSeparator>".length
-                    CombinedHeaderAndtext.basementText =
-                        CombinedHeaderAndtext.basementText.removeRange(0, TextIteratorVal)
+                if (!endText) {
+                    val textIteratorVal = textHolder.length + "<basementSeparator>".length
+                    CombinedHeaderAndText.basementText =
+                        CombinedHeaderAndText.basementText.removeRange(0, textIteratorVal)
                 }
+                if (CombinedHeaderAndText.BasementHeader == "") { endHeader = true }
+                if (CombinedHeaderAndText.basementText == "") { endText = true }
 
-                if (CombinedHeaderAndtext.BasementHeader == "") {
-                    EndHeader = true
-                }
-                if (CombinedHeaderAndtext.basementText == "") {
-                    EndText = true
-                }
-                Separatedbasment.add(BasementSection(HeaderHolder, TextHolder))
+                separatedBasement.add(BasementSection(headerHolder, textHolder))
             }
         }
-        return Separatedbasment
+        return separatedBasement
     }
 
-    fun SetTextBox(TextFrombasement:Vector<BasementSection>){
+    fun setTextBox(TextFromBasement:Vector<BasementSection>){
         //separates the strings, String pair into a vector of String, String pairs
-        var HeaderTextPair = Vector<String>()
-        var CompiledString = String()
-
-        for (iterator in TextFrombasement)
-            HeaderTextPair.add(iterator.BasementHeader + iterator.basementText)
-
-        for (iter in HeaderTextPair)
-            CompiledString += iter
-
-        if(CompiledString == ""){CompiledString += "Enter Text here"}
-
-        basementTextView.setText(CompiledString)
+        val headerTextPair = Vector<String>()
+        var compiledString = String()
+        for (iterator in TextFromBasement){headerTextPair.add(iterator.BasementHeader + iterator.basementText)}
+        for (iterator in headerTextPair){compiledString += iterator}
+        if(compiledString == ""){compiledString += "Enter Text here"}
+        BasementString = compiledString
     }
 
-    fun EraseBasement():BasementObject{
-        basementTextView.text = ""
+    fun eraseBasement():BasementObject{
+        BasementString = ""
         mHeaders = ""
         mText =""
         return this
     }
 
-    fun TextAdded(){
-        var TextAddertextView =  maincontext.findViewById<TextView>(R.id.addTextTxtView)
-        basementTextView.text = basementTextView.text.toString() + '\n' + TextAddertextView.text .toString()
-        TextAddertextView.text = ""
+    fun SetText(){
+        createTextBoxes("Text", textAdderTextView)
+    }
+
+    fun SetHeader(){
+        createTextBoxes("Header", textAdderTextView)
+    }
+
+    fun createTextBoxes(TextType:String, textAdderTextView:TextView) {
+        val basementMainLinearLayout =  mainContext.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout)
+        val newBasementTextView = TextView(mainContext)
+
+        if(TextType == "Text") {
+            newBasementTextView.textSize = 20f
+            newBasementTextView.setTextColor(mainContext.getColor(R.color.white))
+            newBasementTextView.text = textAdderTextView.text
+            newBasementTextView.background = AppCompatResources.getDrawable(mainContext, R.drawable.light_grey_text_adder)
+            newBasementTextView.background.alpha = 40
+        }  else if (TextType == "Header"){
+            newBasementTextView.textSize = 25f
+            newBasementTextView.setTypeface(null, Typeface.BOLD)
+            newBasementTextView.setTextColor(mainContext.getColor(R.color.lightPurple))
+            newBasementTextView.text = textAdderTextView.text.toString()
+        }
+
+        newBasementTextView.minimumWidth = WRAP_CONTENT
+
+        val spacer = Space(mainContext)
+        spacer.minimumHeight = 10
+
+        basementMainLinearLayout.addView(spacer)
+        basementMainLinearLayout.addView(newBasementTextView)
+
+        textAdderTextView.text = "" //clears the user's input section
     }
 }

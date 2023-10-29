@@ -21,16 +21,18 @@
                 android:layout_width="60dp"
                 android:layout_height="50dp"
                 android:background="@drawable/baseline_east_24"
-                android:backgroundTint="@color/white" />
+                android:backgroundTint="@color/white"
+                android:contentDescription="@string/opens_the_headers_navigation"/>
             <Space
                 android:layout_width="220dp"
                 android:layout_height="1dp" />
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/ExportTodataBase"
+                android:id="@+id/ExportToDataBaseBtn"
                 android:layout_width="60dp"
                 android:layout_height="50dp"
                 android:background="@drawable/upload"
-                android:backgroundTint="@color/white"/>
+                android:backgroundTint="@color/white"
+                android:contentDescription="@string/allows_user_to_share_their_basement_code"/>
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/EraseBasement"
                 android:layout_width="50dp"
@@ -42,7 +44,7 @@
         <ScrollView
             android:layout_width="360dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:orientation="vertical">
             <LinearLayout
@@ -50,13 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <EditText
-                    android:id="@+id/TxtVMainBasememnt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Basement Words Go Here"
-                    android:textColor="@color/white"
-                    android:background="@color/GreyBg"/>
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
@@ -65,28 +61,66 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
+
         <LinearLayout
             android:id="@+id/BottomScrollViewLinearLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/PurpleNavColor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="102dp"
+            android:background="@color/PurpleNavColor"
+            android:orientation="vertical">
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/RadioHeaderBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="H"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/RadioTimeBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="T"
+                    android:textColor="#8C0000"
+                    android:textStyle="bold"/>
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@color/PurpleNavColor">
             <LinearLayout
-                android:id="@+id/FirestBottomLayoutBar"
-                android:layout_width="match_parent"
+                android:id="@+id/BottomNavigationTopBar"
+                android:layout_width="360dp"
                 android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
                 android:orientation="horizontal">
-                <Space
-                    android:layout_width="25dp"
-                    android:layout_height="1dp" />
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/OpenGridDialouge"
+                    android:id="@+id/OpenGridDialogBtn"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/grid"
                     android:backgroundTint="@color/white"/>
                 <Space
-                    android:layout_width="55dp"
+                    android:layout_width="40dp"
                     android:layout_height="1dp" />
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/TextFormatter"
@@ -95,16 +129,17 @@
                     android:background="@drawable/text_format"
                     android:backgroundTint="@color/white"/>
                 <Space
-                    android:layout_width="55dp"
+                    android:layout_width="40dp"
                     android:layout_height="1dp" />
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/cameraBtn"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/camera"
-                    android:backgroundTint="@color/white" />
+                    android:backgroundTint="@color/white"
+                    android:contentDescription="@string/allows_the_user_to_take_pictures_or_videos"/>
                 <Space
-                    android:layout_width="55dp"
+                    android:layout_width="40dp"
                     android:layout_height="1dp" />
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/OpenRecordAudioDialogBtn"
@@ -115,24 +150,45 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/SecondBottomLayoutBar"
-                android:layout_width="match_parent"
+                android:id="@+id/BottomNavigationBottomBar"
+                android:layout_width="360dp"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
-                <EditText
-                    android:id="@+id/addTextTxtView"
-                    android:layout_width="340dp"
-                    android:layout_height="40dp"
-                    android:text="    Enter Text Here"
-                    android:textColor="@color/white"
-                    android:background="@drawable/text_adder" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/addTextTxtView"
+                        android:layout_width="270dp"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:autofillHints="Or Start writing here"
+                        android:elevation="1dp"
+                        android:hint="Type here!"
+                        android:inputType="textMultiLine"
+                        android:outlineProvider="none"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:textSize="20dp" />
+
+                    <ImageView
+                        android:layout_width="280dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/text_adder"
+                        android:contentDescription="@string/allows_the_user_to_type_data_to_the_main_text" />
+                </RelativeLayout>
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/AddTextBtn"
-                    android:layout_width="40dp"
+                    android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:background="@drawable/add"
-                    />
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/add" />
             </LinearLayout>
+        </LinearLayout>
+        </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
