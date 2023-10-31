@@ -5,21 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.view.MotionEvent
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.TextView
 import android.widget.Toast
 import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
-import java.util.Timer
-import kotlin.concurrent.timerTask
-
 
 class MainActivity : AppCompatActivity() {
     private val requestImageCapture = 1
@@ -34,10 +26,7 @@ class MainActivity : AppCompatActivity() {
         val bottomLayout = findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
 
         var baseMTObj = BasementObject(this)
-        val db = DataBase(
-            this,
-            baseMTObj
-        ) //the database is initialized using the main context to display successes or failures
+        val db = DataBase(this, baseMTObj) //the database is initialized using the main context to display successes or failures
 
         db.getBasementFromDatabase()
         baseMTObj.setTextBox(baseMTObj.setBasementText(db.returnedDoc))
@@ -57,68 +46,52 @@ class MainActivity : AppCompatActivity() {
         val openHeaderNavigationBtn = findViewById<Button>(R.id.OpenHeaderNavigation)
         openHeaderNavigationBtn.setOnClickListener { BasementObject(this).headerNav.startUpHeader() }
 
-        val openRecordDialogBtn = findViewById<Button>(R.id.OpenRecordAudioDialogBtn)
+        val openRecordDialogBtn = findViewById<Button>(R.id.OpenRecordAudioDialogBtn) ; var recordOn = false
         openRecordDialogBtn.setOnClickListener {
-            callBottomLinearLayoutFunctions(
-                "RecordAudio",
-                bottomLayout
-            )
-        }
+            recordOn = callBottomLinearLayoutFunctions("RecordAudio", bottomLayout, recordOn) }
 
-        val openCameraBtn = findViewById<Button>(R.id.cameraBtn)
-        openCameraBtn.setOnClickListener { callBottomLinearLayoutFunctions("Camera", bottomLayout) }
+        val openCameraBtn = findViewById<Button>(R.id.cameraBtn); var cameraOn = false
+        openCameraBtn.setOnClickListener {
+            cameraOn = callBottomLinearLayoutFunctions("Camera", bottomLayout, cameraOn)}
 
-        val openTextFormattedBtn = findViewById<Button>(R.id.TextFormatter)
+        val openTextFormattedBtn = findViewById<Button>(R.id.TextFormatter); var textOn = false
         openTextFormattedBtn.setOnClickListener {
-            callBottomLinearLayoutFunctions(
-                "TextFormatter",
-                bottomLayout
-            )
-        }
+            textOn = callBottomLinearLayoutFunctions("TextFormatter", bottomLayout, textOn)}
 
-        val openGridCreationBtn = findViewById<Button>(R.id.OpenGridDialogBtn)
+        val openGridCreationBtn = findViewById<Button>(R.id.OpenGridDialogBtn) ; var gridOn = false
         openGridCreationBtn.setOnClickListener {
-            callBottomLinearLayoutFunctions(
-                "CreateCells",
-                bottomLayout
-            )
-        }
+            gridOn = callBottomLinearLayoutFunctions("CreateCells", bottomLayout, gridOn);}
 
         val textAdderBtn = findViewById<Button>(R.id.AddTextBtn)
-        textAdderBtn.setOnClickListener {
-            val RadioTime = findViewById<RadioButton>(R.id.RadioTimeBtn)
-            val RadioHeader = findViewById<RadioButton>(R.id.RadioHeaderBtn)
-
-            if(RadioTime.isChecked){
-                baseMTObj.SetText()
-                RadioTime.isChecked = false
-            }//Do Nothing yet. Will allow the user to set a notification for later
-            else if(RadioHeader.isChecked){
-                baseMTObj.SetHeader()
-                RadioHeader.isChecked = false
-            }
-            else{baseMTObj.SetText() }
-            baseMTObj = BasementObject(this)
-            db.addBasementToDatabase(baseMTObj)
-        }
+        textAdderBtn.setOnClickListener { TextFormatConfig(this).RadioTextAdded(baseMTObj) }
     }
 
-    private fun callBottomLinearLayoutFunctions(FunctionToCall:String, bottomLayout:LinearLayout){
-        if(bottomLayout.childCount >= 2){ bottomLayout.removeViewAt(1) }
-        when (FunctionToCall) {
-            "RecordAudio" -> {AudioConfig(this).CreateAudioDialog()}
-            "Camera" -> { CameraConfig(this).createCameraDialog() }
-            "TextFormatter" -> { TextFormatConfig(this).createTextFormatDialog() }
-            "CreateCells" -> {CreateCell(this).createGridDialog()}
+    private fun callBottomLinearLayoutFunctions(FunctionToCall:String, bottomLayout:LinearLayout, FeatureOn:Boolean): Boolean{
+        var BoolReturn = false
+        if(!FeatureOn){
+            if(bottomLayout.childCount >= 2){ bottomLayout.removeViewAt(0) }
+            when (FunctionToCall) {
+                "RecordAudio" -> {AudioConfig(this).CreateAudioDialog()}
+                "Camera" -> { CameraConfig(this).createCameraDialog() }
+                "TextFormatter" -> { TextFormatConfig(this).createTextFormatDialog() }
+                "CreateCells" -> {CreateCell(this).createGridDialog()}
+            }
+            this.currentFocus?.let { view ->
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                imm?.hideSoftInputFromWindow(view.windowToken, 0)
+            }
+            BoolReturn = true
         }
-        this.currentFocus?.let { view ->
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(view.windowToken, 0)
+        else if(FeatureOn){
+            if (bottomLayout.childCount > 1){ bottomLayout.removeViewAt(0) }
+            BoolReturn = false
         }
+
+        return BoolReturn
     }
 
     private fun mainTextClick(bottomLayout:LinearLayout){
-        if (bottomLayout.childCount > 1 ){ bottomLayout.removeViewAt(1) }
+       // if (bottomLayout.childCount > 1 ){ bottomLayout.removeViewAt(1) }
     }
 
     @Deprecated("Deprecated in Java")

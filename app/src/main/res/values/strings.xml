@@ -5,16 +5,29 @@
     <string name="allows_the_user_to_take_pictures_or_videos">Allows the user to take pictures or videos</string>
     <string name="holds_the_text_segments_of_the_basement">Holds the Text segments of the Basement</string>
     <string name="allows_user_to_share_their_basement_code">Allows user to share their Basement Code</string>
+    <string name="h">H</string>
+    <string name="t">T</string>
+    <string name="type_here">Type here!</string>
+    <string name="format_text">Format Text</string>
+    <string name="size">Size</string>
+    <string name="font">Font</string>
+    <string name="b">B</string>
+    <string name="i">I</string>
+    <string name="u">U</string>
+    <string name="s">S</string>
 
     <string-array name="Fonts">
-        <item>architectural</item>
-        <item>arial</item>
-        <item>futura</item>
-        <item>helvetica</item>
-        <item>palatino</item>
-        <item>optima</item>
-        <item>kabel</item>
-        <item>roffe</item>
+        <item>Droid Sans</item>
+        <item>Mono</item>
+        <item>Droid Serif </item>
+        <item>Fantasy Magist</item>
+        <item>Broken 15</item>
+        <item>Cheese Burger</item>
+        <item>Caviar Dreams</item>
+        <item>DCC-Ash</item>
+        <item>Louis George Cafe</item>
+        <item>Next Sunday</item>
+        <item>Verve</item>
     </string-array>
 
     <string-array name="FontSizes">

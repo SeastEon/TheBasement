@@ -87,14 +87,14 @@
                     android:id="@+id/RadioHeaderBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="H"
+                    android:text="@string/h"
                     android:textStyle="bold" />
 
                 <RadioButton
                     android:id="@+id/RadioTimeBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="T"
+                    android:text="@string/t"
                     android:textColor="#8C0000"
                     android:textStyle="bold"/>
 
@@ -109,9 +109,9 @@
             android:background="@color/PurpleNavColor">
             <LinearLayout
                 android:id="@+id/BottomNavigationTopBar"
-                android:layout_width="360dp"
+                android:layout_width="350dp"
                 android:layout_height="50dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:orientation="horizontal">
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/OpenGridDialogBtn"
@@ -165,12 +165,12 @@
                         android:layout_centerVertical="true"
                         android:autofillHints="Or Start writing here"
                         android:elevation="1dp"
-                        android:hint="Type here!"
+                        android:hint="@string/type_here"
                         android:inputType="textMultiLine"
                         android:outlineProvider="none"
                         android:textColor="@color/white"
                         android:textColorHint="@color/white"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
                     <ImageView
                         android:layout_width="280dp"

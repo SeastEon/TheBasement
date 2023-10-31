@@ -18,7 +18,7 @@ class CreateCell(private var mainActivity: MainActivity) {
        fun createGridDialog() {
         val scrollViewLinearLayout = mainActivity.findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
         val dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_create_cells, null)
-        scrollViewLinearLayout.addView(dialogView)
+        scrollViewLinearLayout.addView(dialogView, 0)
 
         val xSizeSpinner = dialogView.findViewById<Spinner>(R.id.CellXSize)
         ArrayAdapter.createFromResource(mainActivity, R.array.CellSizes, android.R.layout.simple_spinner_item).also { adapter ->
@@ -47,10 +47,10 @@ class CreateCell(private var mainActivity: MainActivity) {
         }
 
         val createGridBtn= mainActivity.findViewById<Button>(R.id.CreateGrid)
-            createGridBtn.setOnClickListener{
+        createGridBtn.setOnClickListener{
             scrollViewLinearLayout.removeView(dialogView)
             createGrid()
-            }
+        }
     }
 
     private fun createGrid(){

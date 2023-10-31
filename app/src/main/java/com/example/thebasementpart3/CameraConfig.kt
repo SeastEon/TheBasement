@@ -24,7 +24,7 @@ class CameraConfig(private var mainActivity: Activity) {
     fun createCameraDialog() {
         val dialogView =  LayoutInflater.from(mainActivity).inflate(R.layout.dialog_camera, null)
         dialogView.elevation = 2f
-        scrollViewLinearLayout.addView(dialogView)
+        scrollViewLinearLayout.addView(dialogView, 0)
 
         val takePictureBtn = dialogView.findViewById<Button>(R.id.TakePictureBtn)
         takePictureBtn.setOnClickListener{

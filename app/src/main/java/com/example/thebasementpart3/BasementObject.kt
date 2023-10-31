@@ -2,14 +2,11 @@ package com.example.thebasementpart3
 
 import android.app.Activity
 import android.graphics.Typeface
-import android.text.Spannable
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Space
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import org.w3c.dom.Text
 import java.util.Vector
 
 class BasementObject( private var mainContext:Activity) {
@@ -132,15 +129,7 @@ class BasementObject( private var mainContext:Activity) {
         return this
     }
 
-    fun SetText(){
-        createTextBoxes("Text", textAdderTextView)
-    }
-
-    fun SetHeader(){
-        createTextBoxes("Header", textAdderTextView)
-    }
-
-    fun createTextBoxes(TextType:String, textAdderTextView:TextView) {
+    fun createTextBoxes(TextType:String) {
         val basementMainLinearLayout =  mainContext.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout)
         val newBasementTextView = TextView(mainContext)
 
