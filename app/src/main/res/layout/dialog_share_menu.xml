@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/PurpleNavColor"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Basement Share"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:background="@color/GreyBg"
+        android:orientation="vertical">
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/LoadShareCode"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/GreyBg"
+            android:text="Load Share Code"
+            android:elevation="10dp"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/CreateShareCode"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/GreyBg"
+            android:text="Create Share Code"
+            android:elevation="10dp"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/ExportToDataBaseBtn"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/GreyBg"
+            android:text="Export to Database"
+            android:elevation="10dp"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/ImportFromDatabase"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:background="@color/GreyBg"
+            android:elevation="10dp"
+            android:text="Import from database"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+</LinearLayout>

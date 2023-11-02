@@ -17,31 +17,25 @@ class MainActivity : AppCompatActivity() {
     private val requestImageCapture = 1
     private val requestVideoCapture = 2
 
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // var BasementId = UUID.randomUUID().toString()
         val bottomLayout = findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
-
         var baseMTObj = BasementObject(this)
         val db = DataBase(this, baseMTObj) //the database is initialized using the main context to display successes or failures
-
-        db.getBasementFromDatabase()
-        baseMTObj.setTextBox(baseMTObj.setBasementText(db.returnedDoc))
+        getInformationFromDatabase(db, baseMTObj)
 
         val exportBtn = findViewById<Button>(R.id.ExportToDataBaseBtn)
-        exportBtn.setOnClickListener {
-            baseMTObj = BasementObject(this) //resets the textBox to the text inside before using
-            db.addBasementToDatabase(baseMTObj)
-        }
+        exportBtn.setOnClickListener {ShareConfig(this, db, baseMTObj).CreateShareDialog() }
 
         val secondaryEditText = findViewById<EditText>(R.id.addTextTxtView)
         secondaryEditText.setOnClickListener { mainTextClick(bottomLayout) }
 
         val eraseBasementBtn = findViewById<Button>(R.id.EraseBasement)
-        eraseBasementBtn.setOnClickListener { } // clear Basement needs to be overhauled
+        eraseBasementBtn.setOnClickListener { db.clearBasementDialog() } // clear Basement needs to be overhauled
 
         val openHeaderNavigationBtn = findViewById<Button>(R.id.OpenHeaderNavigation)
         openHeaderNavigationBtn.setOnClickListener { BasementObject(this).headerNav.startUpHeader() }
@@ -59,8 +53,7 @@ class MainActivity : AppCompatActivity() {
             textOn = callBottomLinearLayoutFunctions("TextFormatter", bottomLayout, textOn)}
 
         val openGridCreationBtn = findViewById<Button>(R.id.OpenGridDialogBtn) ; var gridOn = false
-        openGridCreationBtn.setOnClickListener {
-            gridOn = callBottomLinearLayoutFunctions("CreateCells", bottomLayout, gridOn);}
+        openGridCreationBtn.setOnClickListener { gridOn = callBottomLinearLayoutFunctions("CreateCells", bottomLayout, gridOn);}
 
         val textAdderBtn = findViewById<Button>(R.id.AddTextBtn)
         textAdderBtn.setOnClickListener { TextFormatConfig(this).RadioTextAdded(baseMTObj) }
@@ -86,7 +79,6 @@ class MainActivity : AppCompatActivity() {
             if (bottomLayout.childCount > 1){ bottomLayout.removeViewAt(0) }
             BoolReturn = false
         }
-
         return BoolReturn
     }
 
@@ -114,5 +106,10 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Video not loaded", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    fun getInformationFromDatabase(dataBase: DataBase, baseMTObj:BasementObject){
+        dataBase.getBasementFromDatabase()
+        baseMTObj.setTextBox(baseMTObj.setBasementText(dataBase.returnedDoc))
     }
 }

@@ -27,7 +27,6 @@ class AudioConfig (var mainActivity: Activity): AppCompatActivity() {
 
     //Allows us to prompt the user to record audio
     fun CreateAudioDialog(){
-
         val ScrollViewLinearLayout = mainActivity.findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
         val dialogView =  LayoutInflater.from(mainActivity).inflate(R.layout.dialog_record_audio, null)
         ScrollViewLinearLayout.addView(dialogView, 0)

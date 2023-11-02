@@ -75,43 +75,16 @@
             android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="102dp"
-            android:background="@color/PurpleNavColor"
-            android:orientation="vertical">
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:id="@+id/RadioHeaderBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/h"
-                    android:textStyle="bold" />
-
-                <RadioButton
-                    android:id="@+id/RadioTimeBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/t"
-                    android:textColor="#8C0000"
-                    android:textStyle="bold"/>
-
-            </RadioGroup>
-
-        </LinearLayout>
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:orientation="vertical"
             android:background="@color/PurpleNavColor">
             <LinearLayout
                 android:id="@+id/BottomNavigationTopBar"
                 android:layout_width="350dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="45dp"
                 android:orientation="horizontal">
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/OpenGridDialogBtn"
@@ -151,7 +124,8 @@
 
             <LinearLayout
                 android:id="@+id/BottomNavigationBottomBar"
-                android:layout_width="360dp"
+                android:layout_width="380dp"
+                android:layout_marginLeft="10dp"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <RelativeLayout
@@ -160,7 +134,7 @@
 
                     <EditText
                         android:id="@+id/addTextTxtView"
-                        android:layout_width="270dp"
+                        android:layout_width="320dp"
                         android:layout_height="40dp"
                         android:layout_centerVertical="true"
                         android:autofillHints="Or Start writing here"
@@ -173,7 +147,7 @@
                         android:textSize="20sp" />
 
                     <ImageView
-                        android:layout_width="280dp"
+                        android:layout_width="320dp"
                         android:layout_height="40dp"
                         android:layout_marginTop="5dp"
                         android:background="@drawable/text_adder"
