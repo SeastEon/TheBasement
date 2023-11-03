@@ -13,9 +13,9 @@ import java.util.Vector
 
 
 class NavigateHeader (private var mainContext: Context) {
-    var basementSections = Vector<BasementObject.BasementSection>()
-    private var headers = Vector<String>() // the headers for our document are stored here
 
+    private var headers = Vector<String>() // the headers for our document are stored here
+    var basementSections = Vector<BasementObject.BasementSection>()
     private fun getHeader() {  //separates the headers from the text and stores them inside a string vector
         for (h in basementSections){ headers.add(h.BasementHeader)}
     }

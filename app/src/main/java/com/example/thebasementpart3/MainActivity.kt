@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,46 +18,46 @@ class MainActivity : AppCompatActivity() {
     private val requestImageCapture = 1
     private val requestVideoCapture = 2
 
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val topLayoutTextView= findViewById<TextView>(R.id.addTextTxtView)
         val bottomLayout = findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
-        var baseMTObj = BasementObject(this)
+        var header = NavigateHeader(this)
+        var baseMTObj = BasementObject(this, header)
         val db = DataBase(this, baseMTObj) //the database is initialized using the main context to display successes or failures
         getInformationFromDatabase(db, baseMTObj)
 
+
+        topLayoutTextView.setOnFocusChangeListener { v, hasFocus ->
+            baseMTObj.separateBasementHeaders(db.EncrptData(header))
+            db.addBasementToDatabase(baseMTObj)
+        }
+
         val exportBtn = findViewById<Button>(R.id.ExportToDataBaseBtn)
         exportBtn.setOnClickListener {ShareConfig(this, db, baseMTObj).CreateShareDialog() }
-
-        val secondaryEditText = findViewById<EditText>(R.id.addTextTxtView)
-        secondaryEditText.setOnClickListener { mainTextClick(bottomLayout) }
 
         val eraseBasementBtn = findViewById<Button>(R.id.EraseBasement)
         eraseBasementBtn.setOnClickListener { db.clearBasementDialog() } // clear Basement needs to be overhauled
 
         val openHeaderNavigationBtn = findViewById<Button>(R.id.OpenHeaderNavigation)
-        openHeaderNavigationBtn.setOnClickListener { BasementObject(this).headerNav.startUpHeader() }
+        openHeaderNavigationBtn.setOnClickListener { header.startUpHeader() }
 
         val openRecordDialogBtn = findViewById<Button>(R.id.OpenRecordAudioDialogBtn) ; var recordOn = false
-        openRecordDialogBtn.setOnClickListener {
-            recordOn = callBottomLinearLayoutFunctions("RecordAudio", bottomLayout, recordOn) }
+        openRecordDialogBtn.setOnClickListener { recordOn = callBottomLinearLayoutFunctions("RecordAudio", bottomLayout, recordOn) }
 
         val openCameraBtn = findViewById<Button>(R.id.cameraBtn); var cameraOn = false
-        openCameraBtn.setOnClickListener {
-            cameraOn = callBottomLinearLayoutFunctions("Camera", bottomLayout, cameraOn)}
+        openCameraBtn.setOnClickListener { cameraOn = callBottomLinearLayoutFunctions("Camera", bottomLayout, cameraOn)}
 
         val openTextFormattedBtn = findViewById<Button>(R.id.TextFormatter); var textOn = false
-        openTextFormattedBtn.setOnClickListener {
-            textOn = callBottomLinearLayoutFunctions("TextFormatter", bottomLayout, textOn)}
+        openTextFormattedBtn.setOnClickListener { textOn = callBottomLinearLayoutFunctions("TextFormatter", bottomLayout, textOn)}
 
         val openGridCreationBtn = findViewById<Button>(R.id.OpenGridDialogBtn) ; var gridOn = false
         openGridCreationBtn.setOnClickListener { gridOn = callBottomLinearLayoutFunctions("CreateCells", bottomLayout, gridOn);}
 
-        val textAdderBtn = findViewById<Button>(R.id.AddTextBtn)
-        textAdderBtn.setOnClickListener { TextFormatConfig(this).RadioTextAdded(baseMTObj) }
+
     }
 
     private fun callBottomLinearLayoutFunctions(FunctionToCall:String, bottomLayout:LinearLayout, FeatureOn:Boolean): Boolean{
@@ -80,10 +81,6 @@ class MainActivity : AppCompatActivity() {
             BoolReturn = false
         }
         return BoolReturn
-    }
-
-    private fun mainTextClick(bottomLayout:LinearLayout){
-       // if (bottomLayout.childCount > 1 ){ bottomLayout.removeViewAt(1) }
     }
 
     @Deprecated("Deprecated in Java")
@@ -110,6 +107,6 @@ class MainActivity : AppCompatActivity() {
 
     fun getInformationFromDatabase(dataBase: DataBase, baseMTObj:BasementObject){
         dataBase.getBasementFromDatabase()
-        baseMTObj.setTextBox(baseMTObj.setBasementText(dataBase.returnedDoc))
+        baseMTObj.setTextBox(dataBase.DecryptData(baseMTObj.setBasementText(dataBase.returnedDoc)))
     }
 }

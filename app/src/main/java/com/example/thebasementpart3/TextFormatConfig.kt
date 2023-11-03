@@ -116,22 +116,6 @@ class TextFormatConfig(private var mainActivity: Activity) {
             }
         }
     }
-
-    fun RadioTextAdded(baseMTObj:BasementObject):BasementObject{
-        val RadioTime =dialogView.findViewById<RadioButton>(R.id.RadioTimeBtn)
-        val RadioHeader = dialogView.findViewById<RadioButton>(R.id.RadioHeaderBtn)
-
-        if(RadioTime.isChecked){
-            baseMTObj.createTextBoxes("Text")
-            RadioTime.isChecked = false
-        }
-        else if(RadioHeader.isChecked){
-            baseMTObj.createTextBoxes("Header")
-            RadioHeader.isChecked = false
-        }
-        else{baseMTObj.createTextBoxes("Text")}
-        return baseMTObj
-    }
 }
 
 class CustomTypefaceSpan(family: String?, private val newType: Typeface) :

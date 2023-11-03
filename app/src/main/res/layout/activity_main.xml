@@ -52,7 +52,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
+                <EditText
+                    android:id="@+id/addTextTxtView"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:autofillHints="Or Start writing here"
+                    android:elevation="1dp"
+                    android:hint="@string/type_here"
+                    android:inputType="textMultiLine"
+                    android:outlineProvider="none"
+                    android:background="@drawable/dark_grey_text_adder"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:textSize="20sp" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
@@ -120,46 +133,6 @@
                     android:layout_height="50dp"
                     android:background="@drawable/mic"
                     android:backgroundTint="@color/white" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/BottomNavigationBottomBar"
-                android:layout_width="380dp"
-                android:layout_marginLeft="10dp"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <EditText
-                        android:id="@+id/addTextTxtView"
-                        android:layout_width="320dp"
-                        android:layout_height="40dp"
-                        android:layout_centerVertical="true"
-                        android:autofillHints="Or Start writing here"
-                        android:elevation="1dp"
-                        android:hint="@string/type_here"
-                        android:inputType="textMultiLine"
-                        android:outlineProvider="none"
-                        android:textColor="@color/white"
-                        android:textColorHint="@color/white"
-                        android:textSize="20sp" />
-
-                    <ImageView
-                        android:layout_width="320dp"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/text_adder"
-                        android:contentDescription="@string/allows_the_user_to_type_data_to_the_main_text" />
-                </RelativeLayout>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/AddTextBtn"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="5dp"
-                    android:background="@drawable/add" />
             </LinearLayout>
         </LinearLayout>
         </LinearLayout>

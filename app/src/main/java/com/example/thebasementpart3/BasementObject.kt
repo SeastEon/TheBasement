@@ -9,12 +9,10 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import java.util.Vector
 
-class BasementObject( private var mainContext:Activity) {
+class BasementObject(var mainContext:Activity, var headerNav:NavigateHeader) {
     var BasementString = ""
     var mHeaders =""
     var mText =""
-    var headerNav = NavigateHeader(mainContext)
-    val textAdderTextView =  mainContext.findViewById<TextView>(R.id.addTextTxtView)
 
     init {//constructs the variables for the Basement
         val basementSections = separateBasementHeaders(createBasementSections(BasementString))
@@ -29,6 +27,8 @@ class BasementObject( private var mainContext:Activity) {
         var basementText: String
     )
 
+    //This text a block text and creates header and text sections
+    //When the basement is encypted it gets its headers text from here
     private fun createBasementSections(basementTextView:String): Vector<BasementSection> {
         val basementText = basementTextView
         val basementSectionVector = Vector<BasementSection>()
@@ -64,7 +64,7 @@ class BasementObject( private var mainContext:Activity) {
         return headerNav.basementSections
     }
 
-    private fun separateBasementHeaders(basementSections: Vector<BasementSection>): BasementSection {
+    fun separateBasementHeaders(basementSections: Vector<BasementSection>): BasementSection {
         var basementHeader = ""
         var basementText = ""
         for (Section in basementSections) {
@@ -77,6 +77,7 @@ class BasementObject( private var mainContext:Activity) {
         return BasementSection(basementHeader, basementText)
     }
 
+    //Gets the text from the basement and separates it into the a vector of basements
     fun setBasementText(CombinedHeaderAndText: BasementSection): Vector<BasementSection> {
         val separatedBasement = Vector<BasementSection>()
 
@@ -93,16 +94,11 @@ class BasementObject( private var mainContext:Activity) {
                 val headerHolder = CombinedHeaderAndText.BasementHeader.substringBefore("<basementSeparator>")
                 val textHolder = CombinedHeaderAndText.basementText.substringBefore("<basementSeparator>")
 
-                if (!endHeader) {
-                    val headerIteratorVal = headerHolder.length + "<basementSeparator>".length
-                    CombinedHeaderAndText.BasementHeader = CombinedHeaderAndText.BasementHeader.removeRange(0, headerIteratorVal)
-                }
+                val headerIteratorVal = headerHolder.length + "<basementSeparator>".length
+                CombinedHeaderAndText.BasementHeader = CombinedHeaderAndText.BasementHeader.removeRange(0, headerIteratorVal)
+                val textIteratorVal = textHolder.length + "<basementSeparator>".length
+                CombinedHeaderAndText.basementText = CombinedHeaderAndText.basementText.removeRange(0, textIteratorVal)
 
-                if (!endText) {
-                    val textIteratorVal = textHolder.length + "<basementSeparator>".length
-                    CombinedHeaderAndText.basementText =
-                        CombinedHeaderAndText.basementText.removeRange(0, textIteratorVal)
-                }
                 if (CombinedHeaderAndText.BasementHeader == "") { endHeader = true }
                 if (CombinedHeaderAndText.basementText == "") { endText = true }
 
@@ -127,33 +123,5 @@ class BasementObject( private var mainContext:Activity) {
         mHeaders = ""
         mText =""
         return this
-    }
-
-    fun createTextBoxes(TextType:String) {
-        val basementMainLinearLayout =  mainContext.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout)
-        val newBasementTextView = TextView(mainContext)
-
-        if(TextType == "Text") {
-            newBasementTextView.textSize = 20f
-            newBasementTextView.setTextColor(mainContext.getColor(R.color.white))
-            newBasementTextView.text = textAdderTextView.text
-            newBasementTextView.background = AppCompatResources.getDrawable(mainContext, R.drawable.light_grey_text_adder)
-            newBasementTextView.background.alpha = 40
-        }  else if (TextType == "Header"){
-            newBasementTextView.textSize = 25f
-            newBasementTextView.setTypeface(null, Typeface.BOLD)
-            newBasementTextView.setTextColor(mainContext.getColor(R.color.lightPurple))
-            newBasementTextView.text = textAdderTextView.text.toString()
-        }
-
-        newBasementTextView.minimumWidth = WRAP_CONTENT
-
-        val spacer = Space(mainContext)
-        spacer.minimumHeight = 10
-
-        basementMainLinearLayout.addView(spacer)
-        basementMainLinearLayout.addView(newBasementTextView)
-
-        textAdderTextView.text = "" //clears the user's input section
     }
 }

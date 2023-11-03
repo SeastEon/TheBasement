@@ -1,24 +1,29 @@
 package com.example.thebasementpart3
 
 import android.app.Activity
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.children
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
+import java.io.IOException
+import java.io.OutputStreamWriter
 import java.util.UUID
+import java.util.Vector
 
 
 class DataBase (private var mainActivity: Activity, private var BMObj:BasementObject){
     var basementId = "TestBasement"
-    var ShareCode:String? = null
+    var shareCode:String? = null
     private val db = FirebaseFirestore.getInstance()
     private var documentRef = db.collection("Basement").document(basementId)
     var returnedDoc = BasementObject.BasementSection("", "")
+    var headerKeyVector = Vector<Int>()
 
     fun setDocumentRef(basementId: String){
         val newDocumentRef =db.collection("Basement").document(basementId)
@@ -45,7 +50,7 @@ class DataBase (private var mainActivity: Activity, private var BMObj:BasementOb
     }
 
     fun addBasementToDatabase(BMObj:BasementObject){
-        val basementClassObject = BasementClass(basementId, BMObj.mHeaders, BMObj.mText, ShareCode)
+        val basementClassObject = BasementClass(basementId, BMObj.mHeaders, BMObj.mText, shareCode)
         documentRef.set(basementClassObject)
             .addOnSuccessListener { Toast.makeText(mainActivity, "Successful", Toast.LENGTH_SHORT).show() }
             .addOnFailureListener { e -> Toast.makeText(mainActivity, "Failed$e", Toast.LENGTH_SHORT).show() }
@@ -75,16 +80,84 @@ class DataBase (private var mainActivity: Activity, private var BMObj:BasementOb
         dialogAlert.show()
     }
 
+    fun EncrptData(header: NavigateHeader):Vector<BasementObject.BasementSection> {
+        val bmEncryptVal = basementId.toInt() / basementId.length
+        var encryptedHeader = ""
+        var encryptedText =""
+        var headerKey = 0
+
+        var encryptedBasementObject = BasementObject.BasementSection("", "")
+
+        var encryptedBasementObjectVector = Vector<BasementObject.BasementSection>()
+
+        for (Header in header.basementSections) {
+            for (letter in Header.BasementHeader) {
+                val value = letter + letter.toString().toInt().plus(bmEncryptVal)
+                encryptedHeader += value
+            }
+            for (letter in encryptedHeader){ headerKey += letter.code }
+            headerKeyVector.add(headerKey/encryptedHeader.length )
+
+            encryptedBasementObject.BasementHeader = encryptedHeader
+            for(Text in header.basementSections) {
+                var i = 0
+                for (letter in Text.basementText) {
+                    val value = letter.toString().toInt().plus(headerKeyVector[i])
+                    encryptedText += value.toChar()
+                    i += 1
+                }
+                encryptedBasementObject.basementText = encryptedText
+            }
+            encryptedBasementObjectVector.add(encryptedBasementObject)
+        }
+        return encryptedBasementObjectVector
+    }
+
+    fun DecryptData(BmVector:Vector<BasementObject.BasementSection>):Vector<BasementObject.BasementSection>{
+        var basementIDCode = 0
+
+        var decryptedHeader = ""
+        var decryptedText =""
+        var decryptedBasementObject = BasementObject.BasementSection("", "")
+        var decryptedBasementObjectVector = Vector<BasementObject.BasementSection>()
+
+        for (char in basementId ){basementIDCode += char.code}
+        val bmEncryptVal = basementIDCode / basementId.length
+
+        var i = 0
+        for (Header in BmVector) {
+            for (letter in Header.BasementHeader) {
+                val value = letter.toString().toInt() - bmEncryptVal
+                decryptedHeader += value
+            }
+            decryptedBasementObject.BasementHeader = decryptedHeader
+
+
+            for(Text in BmVector) {
+                for (letter in Text.basementText) {
+                    val value = letter.toString().toInt() - headerKeyVector[i]
+                    decryptedText += value.toChar()
+                }
+                i += 1
+                decryptedBasementObject.basementText = decryptedText
+            }
+            decryptedBasementObjectVector.add(decryptedBasementObject)
+        }
+        return decryptedBasementObjectVector
+    }
+
     fun CreateAndSetShareCode():String{
-        ShareCode = UUID.randomUUID().toString()
+        shareCode = UUID.randomUUID().toString()
         addBasementToDatabase(BMObj)
-        return ShareCode as String
+        return shareCode as String
     }
 
     fun DisableShareCode(){
-        ShareCode = null
+        shareCode = null
         addBasementToDatabase(BMObj)
     }
+
+
 }
 
 
