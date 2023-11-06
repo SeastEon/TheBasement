@@ -29,7 +29,7 @@ class BasementObject(var mainContext:Activity, var headerNav:NavigateHeader) {
 
     //This text a block text and creates header and text sections
     //When the basement is encypted it gets its headers text from here
-    private fun createBasementSections(basementTextView:String): Vector<BasementSection> {
+     fun createBasementSections(basementTextView:String): Vector<BasementSection> {
         val basementText = basementTextView
         val basementSectionVector = Vector<BasementSection>()
         val basementTextVector = ""
@@ -68,12 +68,14 @@ class BasementObject(var mainContext:Activity, var headerNav:NavigateHeader) {
         var basementHeader = ""
         var basementText = ""
         for (Section in basementSections) {
-            basementHeader = Section.BasementHeader + "<basementSeparator>"
-            basementText = Section.basementText + "<basementSeparator>"
+            basementHeader = Section.BasementHeader + "<basementSeparatorHeader>"
+            basementText = Section.basementText + "<basementSeparatorText>"
         }
         basementHeader.drop(basementHeader.length) //removes the last ","
         basementText.drop(basementText.length)
-
+        BasementString = basementHeader + basementText
+        this.mHeaders = basementHeader
+        this.mText = basementText
         return BasementSection(basementHeader, basementText)
     }
 
@@ -81,22 +83,22 @@ class BasementObject(var mainContext:Activity, var headerNav:NavigateHeader) {
     fun setBasementText(CombinedHeaderAndText: BasementSection): Vector<BasementSection> {
         val separatedBasement = Vector<BasementSection>()
 
-        if (CombinedHeaderAndText.BasementHeader == "<basementSeparator>" || CombinedHeaderAndText.BasementHeader == ""){
+        if (CombinedHeaderAndText.BasementHeader == "<basementSeparatorHeader>" || CombinedHeaderAndText.BasementHeader == ""){
             //We know there is no data in this file
             separatedBasement.add(BasementSection("", ""))
-        } else if(CombinedHeaderAndText.basementText == "<basementSeparator>" ||  CombinedHeaderAndText.basementText == ""){
+        } else if(CombinedHeaderAndText.basementText == "<basementSeparatorText>" ||  CombinedHeaderAndText.basementText == ""){
             // we know there is only a header in this file so we can just add the that element to the vector
-            separatedBasement.add(BasementSection(CombinedHeaderAndText.BasementHeader.substringBefore("<basementSeparator>"), ""))
+            separatedBasement.add(BasementSection(CombinedHeaderAndText.BasementHeader.substringBefore("<basementSeparatorHeader>"), ""))
         } else {
             var endText = false; var endHeader = false //these booleans tell us when the
 
             while (!endHeader && !endText) { //these variables are used to decide where we need to delete the recorded text
-                val headerHolder = CombinedHeaderAndText.BasementHeader.substringBefore("<basementSeparator>")
-                val textHolder = CombinedHeaderAndText.basementText.substringBefore("<basementSeparator>")
+                val headerHolder = CombinedHeaderAndText.BasementHeader.substringBefore("<basementSeparatorHeader>")
+                val textHolder = CombinedHeaderAndText.basementText.substringBefore("<basementSeparatorText>")
 
-                val headerIteratorVal = headerHolder.length + "<basementSeparator>".length
+                val headerIteratorVal = headerHolder.length + "<basementSeparatorHeader>".length
                 CombinedHeaderAndText.BasementHeader = CombinedHeaderAndText.BasementHeader.removeRange(0, headerIteratorVal)
-                val textIteratorVal = textHolder.length + "<basementSeparator>".length
+                val textIteratorVal = textHolder.length + "<basementSeparatorText>".length
                 CombinedHeaderAndText.basementText = CombinedHeaderAndText.basementText.removeRange(0, textIteratorVal)
 
                 if (CombinedHeaderAndText.BasementHeader == "") { endHeader = true }

@@ -1,5 +1,7 @@
 package com.example.thebasementpart3
 
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -7,6 +9,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import org.w3c.dom.Text
+import java.io.File
+import java.io.IOException
+import java.io.OutputStreamWriter
 import java.util.UUID
 
 
@@ -56,6 +61,12 @@ class ShareConfig(var mainActivity: MainActivity, var dataBase: DataBase, var ba
         exportFromDataBase.setOnClickListener {
             dataBase.addBasementToDatabase(baseMTObj)
         }
+
+        val exportToFile = dialogView.findViewById<Button>(R.id.ExportToFile)
+        exportToFile.setOnClickListener {
+
+            writeToFile(baseMTObj.BasementString , mainActivity ,dataBase.basementId)
+        }
         dialogAlert.show()
     }
 
@@ -71,6 +82,21 @@ class ShareConfig(var mainActivity: MainActivity, var dataBase: DataBase, var ba
                 Toast.makeText(mainActivity, "Basement Successfully Set", Toast.LENGTH_SHORT).show()
                 shareDialogAlert.dismiss()
             }
+        }
+    }
+
+    private fun writeToFile(data: String, context: Context, basementId:String) {
+        try {
+
+            val outputStreamWriter =
+                OutputStreamWriter(context.openFileOutput("$basementId.base", Context.MODE_PRIVATE))
+            outputStreamWriter.write(data)
+            var BasementFile = mainActivity.getFileStreamPath("$basementId.base")
+            outputStreamWriter.close()
+
+            Toast.makeText(mainActivity, "Basement Successfully written to file $BasementFile", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            Log.e("Exception", "File write failed: $e")
         }
     }
 }

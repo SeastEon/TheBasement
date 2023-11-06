@@ -1,8 +1,6 @@
 package com.example.thebasementpart3
 
 import android.app.Activity
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -11,8 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
-import java.io.IOException
-import java.io.OutputStreamWriter
 import java.util.UUID
 import java.util.Vector
 
@@ -68,8 +64,8 @@ class DataBase (private var mainActivity: Activity, private var BMObj:BasementOb
         val dialogView: View = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_delete, null)
         alertBuilder.setView(dialogView)
         val dialogAlert = alertBuilder.create()
-
         val clearBasementBtn = dialogView.findViewById<Button>(R.id.ClearBasement)
+
         clearBasementBtn.setOnClickListener{
             addBasementToDatabase(BMObj.eraseBasement())
             val layout = mainActivity.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout)
@@ -81,41 +77,44 @@ class DataBase (private var mainActivity: Activity, private var BMObj:BasementOb
     }
 
     fun EncrptData(header: NavigateHeader):Vector<BasementObject.BasementSection> {
-        val bmEncryptVal = basementId.toInt() / basementId.length
+        var basementIDCode = 0
         var encryptedHeader = ""
         var encryptedText =""
         var headerKey = 0
+        for (char in basementId ){basementIDCode += char.code}
+        val bmEncryptVal = basementIDCode / basementId.length / 'a'.code
 
         var encryptedBasementObject = BasementObject.BasementSection("", "")
-
         var encryptedBasementObjectVector = Vector<BasementObject.BasementSection>()
 
-        for (Header in header.basementSections) {
-            for (letter in Header.BasementHeader) {
-                val value = letter + letter.toString().toInt().plus(bmEncryptVal)
-                encryptedHeader += value
-            }
-            for (letter in encryptedHeader){ headerKey += letter.code }
-            headerKeyVector.add(headerKey/encryptedHeader.length )
 
-            encryptedBasementObject.BasementHeader = encryptedHeader
-            for(Text in header.basementSections) {
-                var i = 0
-                for (letter in Text.basementText) {
-                    val value = letter.toString().toInt().plus(headerKeyVector[i])
-                    encryptedText += value.toChar()
-                    i += 1
+        for (Header in header.basementSections) {
+            if (Header.BasementHeader != ""){
+                for (letter in Header.BasementHeader) {
+                    val value = letter.code + bmEncryptVal
+                    encryptedHeader += value.toChar()
                 }
-                encryptedBasementObject.basementText = encryptedText
+                for (letter in encryptedHeader){ headerKey += letter.code }
+                headerKeyVector.add(headerKey/encryptedHeader.length)
+                encryptedBasementObject.BasementHeader = encryptedHeader
+
+                for(Text in header.basementSections) {
+                    var i = 0
+                    for (letter in Text.basementText) {
+                        val value = letter.code + (headerKeyVector[i])
+                        encryptedText += value.toChar()
+                    }
+                    i += 1
+                    encryptedBasementObject.basementText = encryptedText
+                }
+                encryptedBasementObjectVector.add(encryptedBasementObject)
             }
-            encryptedBasementObjectVector.add(encryptedBasementObject)
         }
         return encryptedBasementObjectVector
     }
 
     fun DecryptData(BmVector:Vector<BasementObject.BasementSection>):Vector<BasementObject.BasementSection>{
         var basementIDCode = 0
-
         var decryptedHeader = ""
         var decryptedText =""
         var decryptedBasementObject = BasementObject.BasementSection("", "")
@@ -156,8 +155,6 @@ class DataBase (private var mainActivity: Activity, private var BMObj:BasementOb
         shareCode = null
         addBasementToDatabase(BMObj)
     }
-
-
 }
 
 

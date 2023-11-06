@@ -71,5 +71,19 @@
             android:text="Import from database"
             android:textColor="@color/white"
             android:textSize="15sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/ExportToFile"
+            android:layout_width="match_parent"
+            android:layout_height="28dp"
+            android:background="@color/GreyBg"
+            android:elevation="10dp"
+            android:text="@string/export_to_file"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
     </LinearLayout>
 </LinearLayout>

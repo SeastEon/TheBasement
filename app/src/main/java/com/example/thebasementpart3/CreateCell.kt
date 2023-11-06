@@ -10,10 +10,13 @@ import android.widget.LinearLayout
 import android.widget.Space
 import android.widget.Spinner
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.children
+import java.util.Vector
 
 class CreateCell(private var mainActivity: MainActivity) {
     private var xCellValue = 1
     private var cellYSize = 1
+    var CellsInGrid = Vector<GridCapture>()
 
        fun createGridDialog() {
         val scrollViewLinearLayout = mainActivity.findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
@@ -53,25 +56,28 @@ class CreateCell(private var mainActivity: MainActivity) {
         }
     }
 
+    data class GridCapture(var Layout:LinearLayout, var gridX:Int, var gridY:Int, var maxXval:Int, val masYVal:Int, var GridLayout:EditText)
+
     private fun createGrid(){
         val scrollViewLinearLayout = mainActivity.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout)
         val screenWidth = scrollViewLinearLayout.width
-        val cellXSize = screenWidth / xCellValue
 
         val yCellLayout = LinearLayout(mainActivity) //needed once
         yCellLayout.orientation = LinearLayout.VERTICAL
-        
         yCellLayout.background = AppCompatResources.getDrawable(mainActivity,R.color.LightGrey )
         yCellLayout.background.alpha = 40
+
+        var gridX = screenWidth / xCellValue
 
         // creates the grid
         for (Y in 0 until cellYSize){
             val xCellLayout = LinearLayout(mainActivity) //need multiple of these to create the frid
             xCellLayout.orientation = LinearLayout.HORIZONTAL
-            for (X in 0 until xCellValue){
+            for (X in 0 until gridX * screenWidth){
                 val newEditText = EditText(mainActivity)
-                newEditText.width = cellXSize
+                newEditText.width = gridX
                 xCellLayout.addView(newEditText)
+                CellsInGrid.add(GridCapture(yCellLayout,X, Y, xCellValue, cellYSize, newEditText))
             }
             yCellLayout.addView(xCellLayout)
         }

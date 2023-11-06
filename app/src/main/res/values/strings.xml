@@ -16,6 +16,7 @@
     <string name="u">U</string>
     <string name="s">S</string>
     <string name="share_menu">Share Menu</string>
+    <string name="export_to_file">Export To File</string>
 
     <string-array name="Fonts">
         <item>Droid Sans</item>

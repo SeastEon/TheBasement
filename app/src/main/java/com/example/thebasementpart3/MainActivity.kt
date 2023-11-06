@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.VideoView
@@ -23,15 +24,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val topLayoutTextView= findViewById<TextView>(R.id.addTextTxtView)
+        val mainLayout = findViewById<RelativeLayout>(R.id.MainLinearLayout)
+        val mainTextView = findViewById<TextView>(R.id.addTextTxtView)
         val bottomLayout = findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
         var header = NavigateHeader(this)
         var baseMTObj = BasementObject(this, header)
         val db = DataBase(this, baseMTObj) //the database is initialized using the main context to display successes or failures
         getInformationFromDatabase(db, baseMTObj)
 
-
-        topLayoutTextView.setOnFocusChangeListener { v, hasFocus ->
+        mainLayout.setOnClickListener{
+            baseMTObj.createBasementSections(mainTextView.text.toString())
             baseMTObj.separateBasementHeaders(db.EncrptData(header))
             db.addBasementToDatabase(baseMTObj)
         }
