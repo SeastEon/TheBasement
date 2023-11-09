@@ -10,7 +10,6 @@ import android.widget.LinearLayout
 import android.widget.Space
 import android.widget.Spinner
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.view.children
 import java.util.Vector
 
 class CreateCell(private var mainActivity: MainActivity) {

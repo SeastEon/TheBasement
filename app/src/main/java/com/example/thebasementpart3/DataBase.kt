@@ -1,6 +1,5 @@
 package com.example.thebasementpart3
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -13,7 +12,7 @@ import java.util.UUID
 import java.util.Vector
 
 
-class DataBase (private var mainActivity: Activity, private var BMObj:BasementObject){
+class DataBase (var NavHeader:NavigateHeader){
     var basementId = "TestBasement"
     var shareCode:String? = null
     private val db = FirebaseFirestore.getInstance()
@@ -24,13 +23,15 @@ class DataBase (private var mainActivity: Activity, private var BMObj:BasementOb
     fun setDocumentRef(basementId: String){
         val newDocumentRef =db.collection("Basement").document(basementId)
         documentRef = newDocumentRef
-        Toast.makeText(mainActivity, "Basement Successfully Set", Toast.LENGTH_SHORT).show()
+        Toast.makeText(NavHeader.BMObj.mainActivity, "Basement Successfully Set", Toast.LENGTH_SHORT).show()
     }
 
     val getBasementFromDatabase: () -> BasementObject.BasementSection = {
-        receiveData()
+         receiveData()
          returnedDoc
     }
+
+    fun UpdateBasementObject(BMObj:BasementObject){ this.NavHeader.BMObj = BMObj }
 
     private fun receiveData(){
         documentRef.get().addOnSuccessListener { documentSnapshot ->
@@ -38,18 +39,18 @@ class DataBase (private var mainActivity: Activity, private var BMObj:BasementOb
             if (basement != null) {
                 if(basement.mHeaders != null &&  basement.mText != null) {
                     returnedDoc = BasementObject.BasementSection(basement.mHeaders.toString(), basement.mText.toString())
-                    Toast.makeText(mainActivity, "Basement Successfully received", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(NavHeader.BMObj.mainActivity, "Basement Successfully received", Toast.LENGTH_SHORT).show()
                 }
             }
-            BMObj.setTextBox(BMObj.setBasementText(returnedDoc))
+            NavHeader.BMObj.setTextBox(DecryptData(NavHeader.BMObj.setBasementText(returnedDoc)))
         }
     }
 
-    fun addBasementToDatabase(BMObj:BasementObject){
-        val basementClassObject = BasementClass(basementId, BMObj.mHeaders, BMObj.mText, shareCode)
+    fun addBasementToDatabase(){
+        val basementClassObject = BasementClass(basementId, NavHeader.BMObj.ThisBasementCompiled.BasementHeader, NavHeader.BMObj.ThisBasementCompiled.basementText, shareCode)
         documentRef.set(basementClassObject)
-            .addOnSuccessListener { Toast.makeText(mainActivity, "Successful", Toast.LENGTH_SHORT).show() }
-            .addOnFailureListener { e -> Toast.makeText(mainActivity, "Failed$e", Toast.LENGTH_SHORT).show() }
+            .addOnSuccessListener { Toast.makeText(NavHeader.BMObj.mainActivity, "Successful", Toast.LENGTH_SHORT).show() }
+            .addOnFailureListener { e -> Toast.makeText(NavHeader.BMObj.mainActivity, "Failed$e", Toast.LENGTH_SHORT).show() }
     }
 
     data class BasementClass( //this will need to be expanded to hold the preferences
@@ -60,33 +61,37 @@ class DataBase (private var mainActivity: Activity, private var BMObj:BasementOb
     )
 
     fun clearBasementDialog(){
-        val alertBuilder = AlertDialog.Builder(mainActivity)
-        val dialogView: View = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_delete, null)
+        val alertBuilder = AlertDialog.Builder(NavHeader.BMObj.mainActivity)
+        val dialogView: View = LayoutInflater.from(NavHeader.BMObj.mainActivity).inflate(R.layout.dialog_delete, null)
         alertBuilder.setView(dialogView)
         val dialogAlert = alertBuilder.create()
         val clearBasementBtn = dialogView.findViewById<Button>(R.id.ClearBasement)
 
         clearBasementBtn.setOnClickListener{
-            addBasementToDatabase(BMObj.eraseBasement())
-            val layout = mainActivity.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout)
+            NavHeader.BMObj.eraseBasement()
+            addBasementToDatabase()
+            val layout = NavHeader.BMObj.mainActivity.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout)
             while(layout.childCount > 1){ layout.removeViewAt(1)}
             dialogAlert.dismiss()
-            Toast.makeText(mainActivity, "Basement Successfully erased", Toast.LENGTH_SHORT).show()
+            Toast.makeText(NavHeader.BMObj.mainActivity, "Basement Successfully erased", Toast.LENGTH_SHORT).show()
         }
         dialogAlert.show()
     }
 
-    fun EncrptData(header: NavigateHeader):Vector<BasementObject.BasementSection> {
+    fun GetEncyptedBasementId():Int{
         var basementIDCode = 0
+        for (char in basementId ){basementIDCode += char.code}
+        val bmEncryptVal = basementIDCode / basementId.length / 'a'.code
+        return bmEncryptVal
+    }
+
+    fun EncrptData(header: NavigateHeader):Vector<BasementObject.BasementSection> {
         var encryptedHeader = ""
         var encryptedText =""
         var headerKey = 0
-        for (char in basementId ){basementIDCode += char.code}
-        val bmEncryptVal = basementIDCode / basementId.length / 'a'.code
-
+        val bmEncryptVal = GetEncyptedBasementId()
         var encryptedBasementObject = BasementObject.BasementSection("", "")
         var encryptedBasementObjectVector = Vector<BasementObject.BasementSection>()
-
 
         for (Header in header.basementSections) {
             if (Header.BasementHeader != ""){
@@ -114,27 +119,23 @@ class DataBase (private var mainActivity: Activity, private var BMObj:BasementOb
     }
 
     fun DecryptData(BmVector:Vector<BasementObject.BasementSection>):Vector<BasementObject.BasementSection>{
-        var basementIDCode = 0
         var decryptedHeader = ""
         var decryptedText =""
         var decryptedBasementObject = BasementObject.BasementSection("", "")
         var decryptedBasementObjectVector = Vector<BasementObject.BasementSection>()
-
-        for (char in basementId ){basementIDCode += char.code}
-        val bmEncryptVal = basementIDCode / basementId.length
-
+        val bmEncryptVal = GetEncyptedBasementId()
         var i = 0
+
         for (Header in BmVector) {
             for (letter in Header.BasementHeader) {
-                val value = letter.toString().toInt() - bmEncryptVal
-                decryptedHeader += value
+                val value = letter.code - bmEncryptVal
+                decryptedHeader += value.toChar()
             }
             decryptedBasementObject.BasementHeader = decryptedHeader
 
-
             for(Text in BmVector) {
                 for (letter in Text.basementText) {
-                    val value = letter.toString().toInt() - headerKeyVector[i]
+                    val value = letter.code - headerKeyVector[i]
                     decryptedText += value.toChar()
                 }
                 i += 1
@@ -147,13 +148,13 @@ class DataBase (private var mainActivity: Activity, private var BMObj:BasementOb
 
     fun CreateAndSetShareCode():String{
         shareCode = UUID.randomUUID().toString()
-        addBasementToDatabase(BMObj)
+        addBasementToDatabase()
         return shareCode as String
     }
 
     fun DisableShareCode(){
         shareCode = null
-        addBasementToDatabase(BMObj)
+        addBasementToDatabase()
     }
 }
 

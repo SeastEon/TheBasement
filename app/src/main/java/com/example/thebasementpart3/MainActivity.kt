@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -27,19 +26,21 @@ class MainActivity : AppCompatActivity() {
         val mainLayout = findViewById<RelativeLayout>(R.id.MainLinearLayout)
         val mainTextView = findViewById<TextView>(R.id.addTextTxtView)
         val bottomLayout = findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
-        var header = NavigateHeader(this)
-        var baseMTObj = BasementObject(this, header)
-        val db = DataBase(this, baseMTObj) //the database is initialized using the main context to display successes or failures
-        getInformationFromDatabase(db, baseMTObj)
+        var baseMTObj = BasementObject(this)
+        var header = NavigateHeader(baseMTObj)
+        val db = DataBase(header) //the database is initialized using the main context to display successes or failures
+        getInformationFromDatabase(db)
 
         mainLayout.setOnClickListener{
             baseMTObj.createBasementSections(mainTextView.text.toString())
-            baseMTObj.separateBasementHeaders(db.EncrptData(header))
-            db.addBasementToDatabase(baseMTObj)
+            db.EncrptData(header)
+            baseMTObj.separateBasementHeaders()
+            db.UpdateBasementObject(baseMTObj)
+            db.addBasementToDatabase()
         }
 
         val exportBtn = findViewById<Button>(R.id.ExportToDataBaseBtn)
-        exportBtn.setOnClickListener {ShareConfig(this, db, baseMTObj).CreateShareDialog() }
+        exportBtn.setOnClickListener {ShareConfig(db).CreateShareDialog() }
 
         val eraseBasementBtn = findViewById<Button>(R.id.EraseBasement)
         eraseBasementBtn.setOnClickListener { db.clearBasementDialog() } // clear Basement needs to be overhauled
@@ -58,8 +59,6 @@ class MainActivity : AppCompatActivity() {
 
         val openGridCreationBtn = findViewById<Button>(R.id.OpenGridDialogBtn) ; var gridOn = false
         openGridCreationBtn.setOnClickListener { gridOn = callBottomLinearLayoutFunctions("CreateCells", bottomLayout, gridOn);}
-
-
     }
 
     private fun callBottomLinearLayoutFunctions(FunctionToCall:String, bottomLayout:LinearLayout, FeatureOn:Boolean): Boolean{
@@ -107,8 +106,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun getInformationFromDatabase(dataBase: DataBase, baseMTObj:BasementObject){
+    fun getInformationFromDatabase(dataBase: DataBase){
         dataBase.getBasementFromDatabase()
-        baseMTObj.setTextBox(dataBase.DecryptData(baseMTObj.setBasementText(dataBase.returnedDoc)))
+        dataBase.NavHeader.BMObj.setTextBox(dataBase.DecryptData(dataBase.NavHeader.BMObj.setBasementText(dataBase.returnedDoc)))
     }
 }

@@ -1,6 +1,5 @@
 package com.example.thebasementpart3
 
-import android.content.Context
 import android.icu.lang.UCharacter.IndicPositionalCategory.RIGHT
 import android.view.LayoutInflater
 import android.view.View
@@ -12,32 +11,32 @@ import androidx.appcompat.app.AlertDialog
 import java.util.Vector
 
 
-class NavigateHeader (private var mainContext: Context) {
-
-    private var headers = Vector<String>() // the headers for our document are stored here
+class NavigateHeader (var BMObj: BasementObject) {
     var basementSections = Vector<BasementObject.BasementSection>()
     private fun getHeader() {  //separates the headers from the text and stores them inside a string vector
-        for (h in basementSections){ headers.add(h.BasementHeader)}
+        basementSections = BMObj.vectorBasementObject
+        if(basementSections[0].BasementHeader == ""){BMObj.createBasementSections(BMObj.mainActivity.findViewById<TextView>(R.id.addTextTxtView).text.toString())}
     }
 
     fun startUpHeader() {
         getHeader()
-        val alertBuilder = AlertDialog.Builder(mainContext)
-        val dialogView: View = LayoutInflater.from(mainContext).inflate(R.layout.dialog_header_navigation, null)
+        val alertBuilder = AlertDialog.Builder(BMObj.mainActivity)
+        val dialogView: View = LayoutInflater.from(BMObj.mainActivity).inflate(R.layout.dialog_header_navigation, null)
         alertBuilder.setView(dialogView)
         val dialogAlert = alertBuilder.create()
+        val linearScrollView = dialogView.findViewById<LinearLayout>(R.id.HeaderNavigationScrollLayouut)
 
         val exitButton =  dialogView.findViewById<Button>(R.id.ExitHeaderNavigation)
         exitButton.setOnClickListener{
+            linearScrollView.removeAllViews()
             dialogAlert.dismiss()
         }
 
-        val linearScrollView = dialogView.findViewById<LinearLayout>(R.id.HeaderNavigationScrollLayouut)
-        for (h in headers){
+        for (h in basementSections){
             //this is where we create the text views
-            val newTextView= TextView(mainContext)
-            newTextView.text = h
-            newTextView.setTextColor(mainContext.getColor(R.color.white))
+            val newTextView= TextView(BMObj.mainActivity)
+            newTextView.text = h.BasementHeader
+            newTextView.setTextColor(BMObj.mainActivity.getColor(R.color.white))
             newTextView.textSize = 20f
             linearScrollView.addView(newTextView)
         }
