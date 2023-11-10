@@ -14,13 +14,13 @@ import java.io.OutputStreamWriter
 
 class ShareConfig(var dataBase: DataBase) {
     fun CreateShareDialog(){
-        val alertBuilder = AlertDialog.Builder(dataBase.NavHeader.BMObj.mainActivity)
-        val dialogView: View = LayoutInflater.from(dataBase.NavHeader.BMObj.mainActivity).inflate(R.layout.dialog_share_menu, null)
+        val alertBuilder = AlertDialog.Builder(dataBase.BMObj.mainActivity)
+        val dialogView: View = LayoutInflater.from(dataBase.BMObj.mainActivity).inflate(R.layout.dialog_share_menu, null)
         alertBuilder.setView(dialogView)
         val dialogAlert = alertBuilder.create()
 
-        val shareAlertBuilder = AlertDialog.Builder(dataBase.NavHeader.BMObj.mainActivity)
-        val shareDialogView: View = LayoutInflater.from(dataBase.NavHeader.BMObj.mainActivity).inflate(R.layout.dialog_share_text, null)
+        val shareAlertBuilder = AlertDialog.Builder(dataBase.BMObj.mainActivity)
+        val shareDialogView: View = LayoutInflater.from(dataBase.BMObj.mainActivity).inflate(R.layout.dialog_share_text, null)
         shareAlertBuilder.setView(shareDialogView)
         val shareDialogAlert = shareAlertBuilder.create()
 
@@ -34,7 +34,7 @@ class ShareConfig(var dataBase: DataBase) {
             shareCodeTxt.textSize = 12f
             shareBtn.text = "Reset Code"
             buttonCaller("Load",null,shareBtn, shareDialogAlert)
-            Toast.makeText(dataBase.NavHeader.BMObj.mainActivity, "Share code Successfully enabled", Toast.LENGTH_SHORT).show()
+            Toast.makeText(dataBase.BMObj.mainActivity, "Share code Successfully enabled", Toast.LENGTH_SHORT).show()
             shareDialogAlert.show()
         }
 
@@ -49,7 +49,7 @@ class ShareConfig(var dataBase: DataBase) {
 
         val importFromDataBase = dialogView.findViewById<Button>(R.id.ImportFromDatabase)
         importFromDataBase.setOnClickListener {
-            dataBase.NavHeader.BMObj.mainActivity.getInformationFromDatabase(dataBase)
+            dataBase.getInformationFromDatabase()
         }
         val exportFromDataBase= dialogView.findViewById<Button>(R.id.ExportToDataBaseBtn)
         exportFromDataBase.setOnClickListener {
@@ -58,7 +58,7 @@ class ShareConfig(var dataBase: DataBase) {
 
         val exportToFile = dialogView.findViewById<Button>(R.id.ExportToFile)
         exportToFile.setOnClickListener {
-            writeToFile(dataBase.NavHeader.BMObj.BasementString , dataBase.NavHeader.BMObj.mainActivity ,dataBase.basementId)
+            writeToFile(dataBase.BMObj.BasementString , dataBase.BMObj.mainActivity ,dataBase.basementId)
         }
         dialogAlert.show()
     }
@@ -67,12 +67,12 @@ class ShareConfig(var dataBase: DataBase) {
         shareBtn.setOnClickListener {
             if (buttonThatCalled == "Load") { //loading and switching the share code
                 dataBase.DisableShareCode()
-                Toast.makeText(dataBase.NavHeader.BMObj.mainActivity, "Share code Successfully disabled", Toast.LENGTH_SHORT).show()
+                Toast.makeText(dataBase.BMObj.mainActivity, "Share code Successfully disabled", Toast.LENGTH_SHORT).show()
                 shareDialogAlert.dismiss()
             } else if (buttonThatCalled == "Set") { //setting the basement
                 dataBase.setDocumentRef(shareCodeTxt?.text.toString())
-                dataBase.NavHeader.BMObj.mainActivity.getInformationFromDatabase(dataBase)
-                Toast.makeText(dataBase.NavHeader.BMObj.mainActivity, "Basement Successfully Set", Toast.LENGTH_SHORT).show()
+                dataBase.getInformationFromDatabase()
+                Toast.makeText(dataBase.BMObj.mainActivity, "Basement Successfully Set", Toast.LENGTH_SHORT).show()
                 shareDialogAlert.dismiss()
             }
         }
@@ -83,10 +83,10 @@ class ShareConfig(var dataBase: DataBase) {
             val outputStreamWriter =
                 OutputStreamWriter(context.openFileOutput("$basementId.base", Context.MODE_PRIVATE))
             outputStreamWriter.write(data)
-            var BasementFile = dataBase.NavHeader.BMObj.mainActivity.getFileStreamPath("$basementId.base")
+            var BasementFile = dataBase.BMObj.mainActivity.getFileStreamPath("$basementId.base")
             outputStreamWriter.close()
 
-            Toast.makeText(dataBase.NavHeader.BMObj.mainActivity, "Basement Successfully written to file $BasementFile", Toast.LENGTH_SHORT).show()
+            Toast.makeText(dataBase.BMObj.mainActivity, "Basement Successfully written to file $BasementFile", Toast.LENGTH_SHORT).show()
         } catch (e: IOException) {
             Log.e("Exception", "File write failed: $e")
         }

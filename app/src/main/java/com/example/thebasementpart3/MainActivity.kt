@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
 
         val mainLayout = findViewById<RelativeLayout>(R.id.MainLinearLayout)
@@ -28,37 +29,29 @@ class MainActivity : AppCompatActivity() {
         val bottomLayout = findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
         var baseMTObj = BasementObject(this)
         var header = NavigateHeader(baseMTObj)
-        val db = DataBase(header) //the database is initialized using the main context to display successes or failures
-        getInformationFromDatabase(db)
+        val db = DataBase(baseMTObj) //the database is initialized using the main context to display successes or failures
+        db.getInformationFromDatabase()
 
-        mainLayout.setOnClickListener{
-            baseMTObj.createBasementSections(mainTextView.text.toString())
-            db.EncrptData(header)
-            baseMTObj.separateBasementHeaders()
-            db.UpdateBasementObject(baseMTObj)
-            db.addBasementToDatabase()
-        }
+        mainLayout.setOnClickListener{ db.Configuredatabase(mainTextView) }
 
         val exportBtn = findViewById<Button>(R.id.ExportToDataBaseBtn)
         exportBtn.setOnClickListener {ShareConfig(db).CreateShareDialog() }
 
-        val eraseBasementBtn = findViewById<Button>(R.id.EraseBasement)
-        eraseBasementBtn.setOnClickListener { db.clearBasementDialog() } // clear Basement needs to be overhauled
+        findViewById<Button>(R.id.EraseBasement).setOnClickListener { db.clearBasementDialog() } // clear Basement needs to be overhauled
 
-        val openHeaderNavigationBtn = findViewById<Button>(R.id.OpenHeaderNavigation)
-        openHeaderNavigationBtn.setOnClickListener { header.startUpHeader() }
+        findViewById<Button>(R.id.OpenHeaderNavigation).setOnClickListener { header.startUpHeader() }
 
-        val openRecordDialogBtn = findViewById<Button>(R.id.OpenRecordAudioDialogBtn) ; var recordOn = false
-        openRecordDialogBtn.setOnClickListener { recordOn = callBottomLinearLayoutFunctions("RecordAudio", bottomLayout, recordOn) }
+        var recordOn = false
+        findViewById<Button>(R.id.OpenRecordAudioDialogBtn).setOnClickListener { recordOn = callBottomLinearLayoutFunctions("RecordAudio", bottomLayout, recordOn) }
 
-        val openCameraBtn = findViewById<Button>(R.id.cameraBtn); var cameraOn = false
-        openCameraBtn.setOnClickListener { cameraOn = callBottomLinearLayoutFunctions("Camera", bottomLayout, cameraOn)}
+        var cameraOn = false
+        findViewById<Button>(R.id.cameraBtn).setOnClickListener { cameraOn = callBottomLinearLayoutFunctions("Camera", bottomLayout, cameraOn)}
 
-        val openTextFormattedBtn = findViewById<Button>(R.id.TextFormatter); var textOn = false
-        openTextFormattedBtn.setOnClickListener { textOn = callBottomLinearLayoutFunctions("TextFormatter", bottomLayout, textOn)}
+        var textOn = false
+        findViewById<Button>(R.id.TextFormatter).setOnClickListener { textOn = callBottomLinearLayoutFunctions("TextFormatter", bottomLayout, textOn)}
 
-        val openGridCreationBtn = findViewById<Button>(R.id.OpenGridDialogBtn) ; var gridOn = false
-        openGridCreationBtn.setOnClickListener { gridOn = callBottomLinearLayoutFunctions("CreateCells", bottomLayout, gridOn);}
+        var gridOn = false
+        findViewById<Button>(R.id.OpenGridDialogBtn).setOnClickListener { gridOn = callBottomLinearLayoutFunctions("CreateCells", bottomLayout, gridOn)}
     }
 
     private fun callBottomLinearLayoutFunctions(FunctionToCall:String, bottomLayout:LinearLayout, FeatureOn:Boolean): Boolean{
@@ -66,10 +59,10 @@ class MainActivity : AppCompatActivity() {
         if(!FeatureOn){
             if(bottomLayout.childCount >= 2){ bottomLayout.removeViewAt(0) }
             when (FunctionToCall) {
-                "RecordAudio" -> {AudioConfig(this).CreateAudioDialog()}
+                "RecordAudio" -> { AudioConfig(this).CreateAudioDialog() }
                 "Camera" -> { CameraConfig(this).createCameraDialog() }
                 "TextFormatter" -> { TextFormatConfig(this).createTextFormatDialog() }
-                "CreateCells" -> {CreateCell(this).createGridDialog()}
+                "CreateCells" -> { CreateCell(this).createGridDialog() }
             }
             this.currentFocus?.let { view ->
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -104,10 +97,5 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Video not loaded", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    fun getInformationFromDatabase(dataBase: DataBase){
-        dataBase.getBasementFromDatabase()
-        dataBase.NavHeader.BMObj.setTextBox(dataBase.DecryptData(dataBase.NavHeader.BMObj.setBasementText(dataBase.returnedDoc)))
     }
 }
