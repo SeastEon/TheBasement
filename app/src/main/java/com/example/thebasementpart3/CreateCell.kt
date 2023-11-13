@@ -72,9 +72,10 @@ class CreateCell(private var mainActivity: MainActivity) {
         for (Y in 0 until cellYSize){
             val xCellLayout = LinearLayout(mainActivity) //need multiple of these to create the frid
             xCellLayout.orientation = LinearLayout.HORIZONTAL
-            for (X in 0 until gridX * screenWidth){
-                val newEditText = EditText(mainActivity)
+            for (X in 0 until xCellValue){
+                var newEditText = EditText(mainActivity)
                 newEditText.width = gridX
+                newEditText.setTextColor(AppCompatResources.getColorStateList(mainActivity,R.color.LightGrey ))
                 xCellLayout.addView(newEditText)
                 CellsInGrid.add(GridCapture(yCellLayout,X, Y, xCellValue, cellYSize, newEditText))
             }

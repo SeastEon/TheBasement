@@ -24,6 +24,7 @@ import androidx.core.content.res.ResourcesCompat.getFont
 
 class TextFormatConfig(private var mainActivity: Activity) {
     val textBox: TextView = mainActivity.findViewById<TextView>(R.id.addTextTxtView)
+    var currentTextSize = 12f
     val dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_text_edit, null)
     fun createTextFormatDialog() {
         val scrollViewLinearLayout = mainActivity.findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
@@ -50,7 +51,7 @@ class TextFormatConfig(private var mainActivity: Activity) {
         textSizeSpinner.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                if (textSizeSpinner.selectedItem != null) {updateTextSize(textSizeSpinner.selectedItem.toString().toFloat() / 12)}
+                if (textSizeSpinner.selectedItem != null) {updateTextSize(textSizeSpinner.selectedItem.toString().toFloat())}
             }
             override fun onNothingSelected(parent: AdapterView<*>) {} //does not do anything when nothing is selected
         }
@@ -84,13 +85,16 @@ class TextFormatConfig(private var mainActivity: Activity) {
     private fun updateTextSize(Size: Float) {
         val startSelection: Int = textBox.selectionStart
         val endSelection: Int = textBox.selectionEnd
+        var calculatedSize = (Size/ currentTextSize)
         if (textBox.text != "") {
             val str = SpannableStringBuilder(textBox.text)
+
             if (str.isNotEmpty()) {
-                str.setSpan(RelativeSizeSpan(Size), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                str.setSpan(RelativeSizeSpan(calculatedSize), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 textBox.text = str
             }
         }
+        currentTextSize = Size
     }
 
     private fun updateFontType(Font:String) {

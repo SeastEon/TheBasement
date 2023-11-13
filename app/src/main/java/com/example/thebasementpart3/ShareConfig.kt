@@ -26,6 +26,7 @@ class ShareConfig(var dataBase: DataBase) {
 
         val shareCodeTxt = shareDialogView.findViewById<TextView>(R.id.ShareTxt)
         val shareBtn = shareDialogView.findViewById<Button>(R.id.ShareTextBtn)
+        val ShareCodeprompt = shareDialogView.findViewById<TextView>(R.id.ShareCodeText)
 
         val loadBasementIdBtn = dialogView.findViewById<Button>(R.id.LoadShareCode)
         loadBasementIdBtn.setOnClickListener {
@@ -34,15 +35,16 @@ class ShareConfig(var dataBase: DataBase) {
             shareCodeTxt.textSize = 12f
             shareBtn.text = "Reset Code"
             buttonCaller("Load",null,shareBtn, shareDialogAlert)
-            Toast.makeText(dataBase.BMObj.mainActivity, "Share code Successfully enabled", Toast.LENGTH_SHORT).show()
+            Toast.makeText(dataBase.BMObj.mainActivity, "Share code enabled", Toast.LENGTH_SHORT).show()
             shareDialogAlert.show()
         }
 
         val createShareCode =  dialogView.findViewById<Button>(R.id.CreateShareCode)
         createShareCode.setOnClickListener{
             shareCodeTxt.isEnabled = true //makes it so the user cannot edit the text view
-            shareBtn.text = "Set Basement"
-            shareCodeTxt.text = ""
+            shareBtn.text = "Basement ID set"
+            shareCodeTxt.text = dataBase.basementId
+            ShareCodeprompt.text = "Edit your BasementID. \n This ID is the main identifier for your basement.\n No Basement Id already in use is available."
             buttonCaller("Set", shareCodeTxt ,shareBtn, shareDialogAlert)
             shareDialogAlert.show()
         }
@@ -50,10 +52,12 @@ class ShareConfig(var dataBase: DataBase) {
         val importFromDataBase = dialogView.findViewById<Button>(R.id.ImportFromDatabase)
         importFromDataBase.setOnClickListener {
             dataBase.getInformationFromDatabase()
+            Toast.makeText(dataBase.BMObj.mainActivity, "Basement received", Toast.LENGTH_SHORT).show()
         }
         val exportFromDataBase= dialogView.findViewById<Button>(R.id.ExportToDataBaseBtn)
         exportFromDataBase.setOnClickListener {
             dataBase.addBasementToDatabase()
+            Toast.makeText(dataBase.BMObj.mainActivity, "Basement exported", Toast.LENGTH_SHORT).show()
         }
 
         val exportToFile = dialogView.findViewById<Button>(R.id.ExportToFile)
@@ -67,12 +71,12 @@ class ShareConfig(var dataBase: DataBase) {
         shareBtn.setOnClickListener {
             if (buttonThatCalled == "Load") { //loading and switching the share code
                 dataBase.DisableShareCode()
-                Toast.makeText(dataBase.BMObj.mainActivity, "Share code Successfully disabled", Toast.LENGTH_SHORT).show()
+                Toast.makeText(dataBase.BMObj.mainActivity, "Share code disabled", Toast.LENGTH_SHORT).show()
                 shareDialogAlert.dismiss()
             } else if (buttonThatCalled == "Set") { //setting the basement
                 dataBase.setDocumentRef(shareCodeTxt?.text.toString())
                 dataBase.getInformationFromDatabase()
-                Toast.makeText(dataBase.BMObj.mainActivity, "Basement Successfully Set", Toast.LENGTH_SHORT).show()
+                Toast.makeText(dataBase.BMObj.mainActivity, "Basement ID loaded", Toast.LENGTH_SHORT).show()
                 shareDialogAlert.dismiss()
             }
         }

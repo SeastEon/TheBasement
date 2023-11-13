@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val bottomLayout = findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
         var baseMTObj = BasementObject(this)
         var header = NavigateHeader(baseMTObj)
-        val db = DataBase(baseMTObj) //the database is initialized using the main context to display successes or failures
+        val db = DataBase(baseMTObj, header) //the database is initialized using the main context to display successes or failures
         db.getInformationFromDatabase()
 
         mainLayout.setOnClickListener{ db.Configuredatabase(mainTextView) }
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.EraseBasement).setOnClickListener { db.clearBasementDialog() } // clear Basement needs to be overhauled
 
-        findViewById<Button>(R.id.OpenHeaderNavigation).setOnClickListener { header.startUpHeader() }
+        findViewById<Button>(R.id.OpenHeaderNavigation).setOnClickListener {header.startUpHeader() }
 
         var recordOn = false
         findViewById<Button>(R.id.OpenRecordAudioDialogBtn).setOnClickListener { recordOn = callBottomLinearLayoutFunctions("RecordAudio", bottomLayout, recordOn) }

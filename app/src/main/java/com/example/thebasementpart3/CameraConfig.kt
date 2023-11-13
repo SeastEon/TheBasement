@@ -69,7 +69,7 @@ fun addPicture(ImageBitmap:Bitmap){
             startActivityForResult(mainActivity, takePictureIntent,requestCameraCapture , null)
             Toast.makeText(mainActivity, "Picture taken Successfully", Toast.LENGTH_SHORT).show()
         } catch (e: ActivityNotFoundException) {
-            Toast.makeText(mainActivity, "Shit's broke", Toast.LENGTH_SHORT).show()
+            Toast.makeText(mainActivity, "To be implemented", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -12,8 +12,8 @@ import com.google.firebase.firestore.ktx.toObject
 import java.util.UUID
 import java.util.Vector
 
-class DataBase (var BMObj:BasementObject){
-    var basementId = "TestBasement"
+class DataBase (var BMObj:BasementObject, var NavHeader: NavigateHeader){
+    var basementId = "Chai-ith"
     var shareCode:String? = null
     private val db = FirebaseFirestore.getInstance()
     private var documentRef = db.collection("Basement").document(basementId)
@@ -22,7 +22,7 @@ class DataBase (var BMObj:BasementObject){
     fun setDocumentRef(basementId: String){
         val newDocumentRef =db.collection("Basement").document(basementId)
         documentRef = newDocumentRef
-        Toast.makeText(BMObj.mainActivity, "Basement Successfully Set", Toast.LENGTH_SHORT).show()
+        Toast.makeText(BMObj.mainActivity, "Basement Set", Toast.LENGTH_SHORT).show()
     }
 
     val getBasementFromDatabase: () -> BasementObject.BasementSection = {
@@ -36,7 +36,6 @@ class DataBase (var BMObj:BasementObject){
             if (basement != null) {
                 if(basement.mHeaders != null &&  basement.mText != null) {
                     returnedDoc = BasementObject.BasementSection(basement.mHeaders.toString(), basement.mText.toString())
-                    Toast.makeText(BMObj.mainActivity, "Basement Successfully received", Toast.LENGTH_SHORT).show()
                 }
             }
             BMObj.vectorBasementObject = DecryptData(BMObj.GetBasementVectorsWithoutDelimiter(returnedDoc))
@@ -46,8 +45,7 @@ class DataBase (var BMObj:BasementObject){
 
     fun addBasementToDatabase(){
         documentRef.set( BasementClass(basementId, BMObj.ThisBasementCompiled.BasementHeader, BMObj.ThisBasementCompiled.basementText, shareCode))
-            .addOnSuccessListener { Toast.makeText(BMObj.mainActivity, "Successful", Toast.LENGTH_SHORT).show() }
-            .addOnFailureListener { e -> Toast.makeText(BMObj.mainActivity, "Failed$e", Toast.LENGTH_SHORT).show() }
+            .addOnFailureListener { e -> Toast.makeText(BMObj.mainActivity, "Basement export Failed$e", Toast.LENGTH_SHORT).show() }
     }
 
     data class BasementClass( //this will need to be expanded to hold the preferences
@@ -70,7 +68,7 @@ class DataBase (var BMObj:BasementObject){
             val layout = BMObj.mainActivity.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout)
             while(layout.childCount > 1){ layout.removeViewAt(1)}
             dialogAlert.dismiss()
-            Toast.makeText(BMObj.mainActivity, "Basement Successfully erased", Toast.LENGTH_SHORT).show()
+            Toast.makeText(BMObj.mainActivity, "Basement erased", Toast.LENGTH_SHORT).show()
         }
         dialogAlert.show()
     }
@@ -85,7 +83,7 @@ class DataBase (var BMObj:BasementObject){
         var encryptedBasementObjectVector = Vector<BasementObject.BasementSection>()
         val bmEncryptVal = GetEncyptedBasementId()
         var key = 0
-
+        NavHeader.SetBasementHeaders(BmVector) //gives the decrypted data to the header
         for (basement in BmVector) {
             var encryptedHeader = ""; var encryptedText = ""
             if (basement.BasementHeader != "") {
@@ -123,6 +121,7 @@ class DataBase (var BMObj:BasementObject){
             }
             decryptedBasementObjectVector.add(BasementObject.BasementSection(decryptedHeader,decryptedText))
         }
+        NavHeader.SetBasementHeaders(decryptedBasementObjectVector) //gives the decrypted data to the header
         return decryptedBasementObjectVector
     }
 
