@@ -23,15 +23,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-
         val mainLayout = findViewById<RelativeLayout>(R.id.MainLinearLayout)
         val mainTextView = findViewById<TextView>(R.id.addTextTxtView)
         val bottomLayout = findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
+
         var baseMTObj = BasementObject(this)
         var header = NavigateHeader(baseMTObj)
         val db = DataBase(baseMTObj, header) //the database is initialized using the main context to display successes or failures
-        db.getInformationFromDatabase()
 
+        db.getInformationFromDatabase()
         mainLayout.setOnClickListener{ db.Configuredatabase(mainTextView) }
 
         val exportBtn = findViewById<Button>(R.id.ExportToDataBaseBtn)

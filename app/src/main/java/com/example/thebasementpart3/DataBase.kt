@@ -13,7 +13,7 @@ import java.util.UUID
 import java.util.Vector
 
 class DataBase (var BMObj:BasementObject, var NavHeader: NavigateHeader){
-    var basementId = "Chai-ith"
+    var basementId = "TestBasment2"
     var shareCode:String? = null
     private val db = FirebaseFirestore.getInstance()
     private var documentRef = db.collection("Basement").document(basementId)

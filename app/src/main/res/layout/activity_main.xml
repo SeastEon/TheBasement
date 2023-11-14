@@ -18,21 +18,24 @@
             android:background="@color/PurpleNavColor">
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/OpenHeaderNavigation"
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/baseline_east_24"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/new_navigation_menu"
                 android:backgroundTint="@color/white"
                 android:contentDescription="@string/opens_the_headers_navigation"/>
             <Space
-                android:layout_width="220dp"
+                android:layout_width="240dp"
                 android:layout_height="1dp" />
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/ExportToDataBaseBtn"
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/upload"
+                android:background="@drawable/share_btn"
                 android:backgroundTint="@color/white"
-                android:contentDescription="@string/allows_user_to_share_their_basement_code"/>
+                android:contentDescription="@string/allows_user_to_share_their_basement_code" />
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/EraseBasement"
                 android:layout_width="50dp"

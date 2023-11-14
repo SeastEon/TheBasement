@@ -21,7 +21,7 @@
         android:orientation="horizontal">
     <EditText
         android:id="@+id/ShareTxt"
-        android:layout_width="250dp"
+        android:layout_width="340dp"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
@@ -30,13 +30,31 @@
         android:textSize="20sp"
         android:textColor="@color/white"
         android:background="@drawable/dark_grey_text_adder"/>
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/ShareTextBtn"
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginLeft="60dp"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:background="@drawable/purple_accept_box"
-        android:text=""
-        android:textSize="15dp"
-        android:textColor="@color/white"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/ShareTextBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/purple_accept_box"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_marginLeft="5dp"
+            android:id="@+id/ResetCodeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/purple_accept_box"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="15dp" />
     </LinearLayout>
 </LinearLayout>

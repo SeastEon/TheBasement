@@ -1,6 +1,12 @@
 package com.example.thebasementpart3
 
+import android.R.attr.label
+import android.R.attr.text
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +14,10 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
 import java.io.IOException
 import java.io.OutputStreamWriter
+import java.util.UUID
 
 
 class ShareConfig(var dataBase: DataBase) {
@@ -27,14 +35,18 @@ class ShareConfig(var dataBase: DataBase) {
         val shareCodeTxt = shareDialogView.findViewById<TextView>(R.id.ShareTxt)
         val shareBtn = shareDialogView.findViewById<Button>(R.id.ShareTextBtn)
         val ShareCodeprompt = shareDialogView.findViewById<TextView>(R.id.ShareCodeText)
+        val RandomiseCodeOrCopyCode = shareDialogView.findViewById<Button>(R.id.ResetCodeBtn)
 
         val loadBasementIdBtn = dialogView.findViewById<Button>(R.id.LoadShareCode)
         loadBasementIdBtn.setOnClickListener {
-            shareCodeTxt.isEnabled = false
+            shareCodeTxt.isEnabled = true
             shareCodeTxt.text = dataBase.CreateAndSetShareCode()
+            shareCodeTxt.setInputType(InputType.TYPE_NULL);
             shareCodeTxt.textSize = 12f
             shareBtn.text = "Reset Code"
+            RandomiseCodeOrCopyCode.text = "Copy Code"
             buttonCaller("Load",null,shareBtn, shareDialogAlert)
+            buttonCaller("Copy",shareCodeTxt, RandomiseCodeOrCopyCode, shareDialogAlert)
             Toast.makeText(dataBase.BMObj.mainActivity, "Share code enabled", Toast.LENGTH_SHORT).show()
             shareDialogAlert.show()
         }
@@ -44,8 +56,11 @@ class ShareConfig(var dataBase: DataBase) {
             shareCodeTxt.isEnabled = true //makes it so the user cannot edit the text view
             shareBtn.text = "Basement ID set"
             shareCodeTxt.text = dataBase.basementId
+            RandomiseCodeOrCopyCode.text = "Randomise Code"
             ShareCodeprompt.text = "Edit your BasementID. \n This ID is the main identifier for your basement.\n No Basement Id already in use is available."
-            buttonCaller("Set", shareCodeTxt ,shareBtn, shareDialogAlert)
+            ShareCodeprompt.textSize = 12f
+            buttonCaller("Set",null,shareBtn, shareDialogAlert)
+            buttonCaller("RandomiseCode", shareCodeTxt ,RandomiseCodeOrCopyCode, shareDialogAlert)
             shareDialogAlert.show()
         }
 
@@ -67,17 +82,33 @@ class ShareConfig(var dataBase: DataBase) {
         dialogAlert.show()
     }
 
-    fun buttonCaller(buttonThatCalled:String, shareCodeTxt:TextView?, shareBtn:Button, shareDialogAlert:AlertDialog ){
-        shareBtn.setOnClickListener {
-            if (buttonThatCalled == "Load") { //loading and switching the share code
-                dataBase.DisableShareCode()
-                Toast.makeText(dataBase.BMObj.mainActivity, "Share code disabled", Toast.LENGTH_SHORT).show()
-                shareDialogAlert.dismiss()
-            } else if (buttonThatCalled == "Set") { //setting the basement
-                dataBase.setDocumentRef(shareCodeTxt?.text.toString())
-                dataBase.getInformationFromDatabase()
-                Toast.makeText(dataBase.BMObj.mainActivity, "Basement ID loaded", Toast.LENGTH_SHORT).show()
-                shareDialogAlert.dismiss()
+    fun buttonCaller(buttonThatCalled:String, shareCodeTxt:TextView?, ButtonToChange:Button, shareDialogAlert:AlertDialog ) {
+        if (buttonThatCalled == "Load" || buttonThatCalled == "Set") {
+            ButtonToChange.setOnClickListener {
+                if (buttonThatCalled == "Load") { //loading and switching the share code
+                    dataBase.DisableShareCode()
+                    Toast.makeText(dataBase.BMObj.mainActivity, "Share code disabled", Toast.LENGTH_SHORT).show()
+                    shareDialogAlert.dismiss()
+                } else if (buttonThatCalled == "Set") { //setting the basement
+                    if (shareCodeTxt != null) {
+                        dataBase.basementId = shareCodeTxt.text.toString()
+                        dataBase.setDocumentRef(shareCodeTxt.text.toString())
+                    }
+
+                    dataBase.getInformationFromDatabase()
+                    Toast.makeText(dataBase.BMObj.mainActivity, "Basement ID loaded", Toast.LENGTH_SHORT).show()
+                    shareDialogAlert.dismiss()
+                }
+            }
+        } else if (buttonThatCalled == "Copy" || buttonThatCalled == "RandomiseCode") {
+            ButtonToChange.setOnClickListener {
+                if (buttonThatCalled == "Copy") {
+                    if (shareCodeTxt != null) { dataBase.BMObj.mainActivity.copyToClipboard(shareCodeTxt.text) }
+                    Toast.makeText(dataBase.BMObj.mainActivity, "Code Copied", Toast.LENGTH_SHORT).show()
+
+                } else if (buttonThatCalled == "RandomiseCode") {
+                    if (shareCodeTxt != null) { shareCodeTxt.text = UUID.randomUUID().toString() }
+                }
             }
         }
     }
@@ -94,5 +125,11 @@ class ShareConfig(var dataBase: DataBase) {
         } catch (e: IOException) {
             Log.e("Exception", "File write failed: $e")
         }
+    }
+
+    fun Context.copyToClipboard(text: CharSequence){
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("label",text)
+        clipboard.setPrimaryClip(clip)
     }
 }
