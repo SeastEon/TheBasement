@@ -1,6 +1,5 @@
 package com.example.thebasementpart3
 
-import android.app.Activity
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.Spannable
@@ -16,7 +15,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.RadioButton
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat.getFont
@@ -26,6 +24,14 @@ class TextFormatConfig(private var db: DataBase) {
     val textBox: TextView = db.BMObj.mainActivity.findViewById(R.id.addTextTxtView)
     var currentTextSize = 12f
     val dialogView = LayoutInflater.from(db.BMObj.mainActivity).inflate(R.layout.dialog_text_edit, null)
+
+    data class StoreTextChanges(
+        var Beginning:Int ,
+        var End: Int,
+        var Change: String, // can be Bold, italic, Underline, StrikeThrough, Size, Font
+        var ChangeParameterInString:String? = null
+    )
+
     fun createTextFormatDialog() {
         val scrollViewLinearLayout = db.BMObj.mainActivity.findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
         scrollViewLinearLayout.addView(dialogView, 0)
@@ -73,6 +79,7 @@ class TextFormatConfig(private var db: DataBase) {
         val startSelection: Int = textBox.selectionStart
         val endSelection: Int = textBox.selectionEnd
         val str = SpannableStringBuilder(textBox.text)
+        db.basementchanges.textChanges?.add(StoreTextChanges(startSelection, endSelection, selection, null))
         when (selection) {
             "Bold" -> { str.setSpan(StyleSpan(Typeface.BOLD), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
             "Italic" -> { str.setSpan(StyleSpan(Typeface.ITALIC), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
@@ -85,7 +92,9 @@ class TextFormatConfig(private var db: DataBase) {
     private fun updateTextSize(Size: Float) {
         val startSelection: Int = textBox.selectionStart
         val endSelection: Int = textBox.selectionEnd
-        var calculatedSize = (Size/ currentTextSize)
+        val calculatedSize = (Size/ currentTextSize)
+        db.basementchanges.textChanges?.add(StoreTextChanges(startSelection, endSelection, "Size", Size.toString())
+        )
         if (textBox.text != "") {
             val str = SpannableStringBuilder(textBox.text)
 
@@ -100,6 +109,7 @@ class TextFormatConfig(private var db: DataBase) {
     private fun updateFontType(Font:String) {
         val startSelection: Int = textBox.selectionStart
         val endSelection: Int = textBox.selectionEnd
+        db.basementchanges.textChanges?.add(StoreTextChanges(startSelection, endSelection, "Font", Font))
         if (textBox.text != "") {
             val str = SpannableStringBuilder(textBox.text)
             if (str.isNotEmpty()) {
@@ -121,8 +131,6 @@ class TextFormatConfig(private var db: DataBase) {
         }
     }
 }
-
-
 
 class CustomTypefaceSpan(family: String?, private val newType: Typeface) :
     TypefaceSpan(family) {

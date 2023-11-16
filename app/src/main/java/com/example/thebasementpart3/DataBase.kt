@@ -1,6 +1,5 @@
 package com.example.thebasementpart3
 
-import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -16,7 +15,7 @@ import java.util.Vector
 class DataBase (var BMObj:BasementObject, var NavHeader: NavigateHeader){
     var basementId = "TestBasment2"
     var shareCode:String? = null
-    var basementchanges = basementChanges(null, null, null,null)
+    var basementchanges = basementChanges()
     private val db = FirebaseFirestore.getInstance()
     private var documentRef = db.collection("Basement").document(basementId)
     var returnedDoc = BasementObject.BasementSection("", "")
@@ -28,12 +27,12 @@ class DataBase (var BMObj:BasementObject, var NavHeader: NavigateHeader){
         var mShareCode:String? = null,
         var basementAugmentations: basementChanges? = null
     )
-
     data class basementChanges(
         var GridContents: Vector<CreateCell.GridCapture>? = null,
         var AudioFileLocations:Vector<String>? = null,
         var PictureLocations:Vector<String>? = null,
         var VideoLocations:Vector<String>? = null,
+        var textChanges:Vector<TextFormatConfig.StoreTextChanges>? = null
     )
 
     fun setDocumentRef(basementId: String){
@@ -90,7 +89,7 @@ class DataBase (var BMObj:BasementObject, var NavHeader: NavigateHeader){
     }
 
     fun EncrptData(BmVector:Vector<BasementObject.BasementSection>):Vector<BasementObject.BasementSection> {
-        var encryptedBasementObjectVector = Vector<BasementObject.BasementSection>()
+        val encryptedBasementObjectVector = Vector<BasementObject.BasementSection>()
         val bmEncryptVal = GetEncyptedBasementId()
         var key = 0
         NavHeader.SetBasementHeaders(BmVector) //gives the decrypted data to the header
@@ -114,7 +113,7 @@ class DataBase (var BMObj:BasementObject, var NavHeader: NavigateHeader){
     }
 
     fun DecryptData(BmVector:Vector<BasementObject.BasementSection>):Vector<BasementObject.BasementSection>{
-        var decryptedBasementObjectVector = Vector<BasementObject.BasementSection>()
+        val decryptedBasementObjectVector = Vector<BasementObject.BasementSection>()
         val bmEncryptVal = GetEncyptedBasementId()
         var key = 0
         for (basement in BmVector) {
