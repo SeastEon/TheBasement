@@ -1,5 +1,6 @@
 package com.example.thebasementpart3
 
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -15,10 +16,7 @@ import java.util.Vector
 class DataBase (var BMObj:BasementObject, var NavHeader: NavigateHeader){
     var basementId = "TestBasment2"
     var shareCode:String? = null
-    var GridContents: Vector<CreateCell.GridCapture>? = null
-    var AudioFileLocations:Vector<String>? = null
-    var PictureLocations:Vector<String>? = null
-    var VideoLocations:Vector<String>? = null
+    var basementchanges = basementChanges(null, null, null,null)
     private val db = FirebaseFirestore.getInstance()
     private var documentRef = db.collection("Basement").document(basementId)
     var returnedDoc = BasementObject.BasementSection("", "")
@@ -28,8 +26,14 @@ class DataBase (var BMObj:BasementObject, var NavHeader: NavigateHeader){
         var mHeaders: String? = null,
         var mText: String? = null,
         var mShareCode:String? = null,
+        var basementAugmentations: basementChanges? = null
+    )
+
+    data class basementChanges(
         var GridContents: Vector<CreateCell.GridCapture>? = null,
-        var AudioFileLocations:Vector<String>? = null
+        var AudioFileLocations:Vector<String>? = null,
+        var PictureLocations:Vector<String>? = null,
+        var VideoLocations:Vector<String>? = null,
     )
 
     fun setDocumentRef(basementId: String){
@@ -57,7 +61,7 @@ class DataBase (var BMObj:BasementObject, var NavHeader: NavigateHeader){
     }
 
     fun addBasementToDatabase(){
-        documentRef.set( BasementClass(basementId, BMObj.ThisBasementCompiled.BasementHeader, BMObj.ThisBasementCompiled.basementText, shareCode, GridContents, AudioFileLocations))
+        documentRef.set( BasementClass(basementId, BMObj.ThisBasementCompiled.BasementHeader, BMObj.ThisBasementCompiled.basementText, shareCode, basementchanges))
             .addOnFailureListener { e -> Toast.makeText(BMObj.mainActivity, "Basement export Failed$e", Toast.LENGTH_SHORT).show() }
     }
 

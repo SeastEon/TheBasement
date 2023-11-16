@@ -109,7 +109,7 @@ fun addPicture(ImageBitmap:Bitmap){
                 var BasementPictureFile = dataBase?.BMObj?.mainActivity?.getFileStreamPath("BasementPicture$numberOfPictures.jpeg")
                 if (basementPicture != null) {
                     if (dataBase != null) {
-                        if (BasementPictureFile != null) { dataBase.PictureLocations?.add(BasementPictureFile.path) }
+                        if (BasementPictureFile != null) { dataBase.basementchanges.PictureLocations?.add(BasementPictureFile.path) }
                     }
                 }
                 fileOutputStream.close();
@@ -122,7 +122,7 @@ fun addPicture(ImageBitmap:Bitmap){
             var BasementVideoFile = dataBase?.BMObj?.mainActivity?.getFileStreamPath(file.name)
             if (basementPicture != null) {
                 if (dataBase != null) {
-                    if (BasementVideoFile != null) { dataBase.VideoLocations?.add(BasementVideoFile.path)
+                    if (BasementVideoFile != null) { dataBase.basementchanges.VideoLocations?.add(BasementVideoFile.path)
                     }
                 }
             }

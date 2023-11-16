@@ -120,9 +120,6 @@ class TextFormatConfig(private var db: DataBase) {
             }
         }
     }
-    fun SetFormattedText():SpannableStringBuilder{
-        return  SpannableStringBuilder(textBox.text)
-    }
 }
 
 

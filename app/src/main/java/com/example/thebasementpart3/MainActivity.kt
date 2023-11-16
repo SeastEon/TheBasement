@@ -30,9 +30,7 @@ class MainActivity : AppCompatActivity() {
         var baseMTObj = BasementObject(this)
         var header = NavigateHeader(baseMTObj)
         val db = DataBase(baseMTObj, header) //the database is initialized using the main context to display successes or failures
-        val getDatabase: () -> DataBase = {
-             db
-        }
+        val getDatabase: () -> DataBase = { db }
 
         db.getInformationFromDatabase()
         mainLayout.setOnClickListener{ db.Configuredatabase(mainTextView) }
@@ -63,8 +61,8 @@ class MainActivity : AppCompatActivity() {
             if(bottomLayout.childCount >= 2){ bottomLayout.removeViewAt(0) }
             when (FunctionToCall) {
                 "RecordAudio" -> { AudioConfig(db).CreateAudioDialog() }
-                "TextFormatter" -> { TextFormatConfig(db).createTextFormatDialog() }
                 "CreateCells" -> { CreateCell(db).createGridDialog() }
+                "TextFormatter" -> {TextFormatConfig(db).createTextFormatDialog()}
                 "Camera" -> { var Camera = CameraConfig(this)
                     Camera.createCameraDialog();
                     Camera.SetDB(db)}

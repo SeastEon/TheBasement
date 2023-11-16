@@ -85,7 +85,7 @@ class CreateCell(private var db: DataBase) {
         spacer.minimumHeight = 10
         scrollViewLinearLayout.addView(spacer)
         scrollViewLinearLayout.addView(yCellLayout)
-        db.GridContents = CellsInGrid //records the grid for the database
+        db.basementchanges.GridContents = CellsInGrid //records the grid for the database
     }
 
     fun OnReload(GridElements :Vector<GridCapture>){
@@ -115,7 +115,6 @@ class CreateCell(private var db: DataBase) {
         spacer.minimumHeight = 10
         scrollViewLinearLayout.addView(spacer)
         scrollViewLinearLayout.addView(yCellLayout)
-        db.GridContents = CellsInGrid //records the grid for the database
     }
 }
 

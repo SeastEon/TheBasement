@@ -110,7 +110,7 @@ class AudioConfig (var db: DataBase): AppCompatActivity() {
             if (isChecked) {
                 playAndPauseButton.foreground = AppCompatResources.getDrawable(db.BMObj.mainActivity,R.drawable.pause_icon)
                 fileName = "${db.BMObj.mainActivity.externalCacheDir?.absolutePath}/" + GivenfileName + ".3gp"
-                AudioFilesLocations.add(fileName)
+                db.basementchanges.AudioFileLocations?.add(fileName)
                 startPlaying()
             } else {
                 playAndPauseButton.foreground = AppCompatResources.getDrawable(db.BMObj.mainActivity,R.drawable.play_arrow)
