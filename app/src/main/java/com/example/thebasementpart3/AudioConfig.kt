@@ -15,20 +15,22 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import java.io.IOException
+import java.util.Vector
 
 private var permissionToRecordAccepted = false
 private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
 
-class AudioConfig (var mainActivity: Activity): AppCompatActivity() {
+class AudioConfig (var db: DataBase): AppCompatActivity() {
     private var permissions: Array<String> = arrayOf(Manifest.permission.RECORD_AUDIO)
     private var fileName: String = ""
     private var recorder: MediaRecorder? = null
     private var player: MediaPlayer? = null
+    var AudioFilesLocations = Vector<String>()
 
     //Allows us to prompt the user to record audio
     fun CreateAudioDialog(){
-        val ScrollViewLinearLayout = mainActivity.findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
-        val dialogView =  LayoutInflater.from(mainActivity).inflate(R.layout.dialog_record_audio, null)
+        val ScrollViewLinearLayout = db.BMObj.mainActivity.findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
+        val dialogView =  LayoutInflater.from(db.BMObj.mainActivity).inflate(R.layout.dialog_record_audio, null)
         ScrollViewLinearLayout.addView(dialogView, 0)
         val EditTetRedordName = dialogView.findViewById<EditText>(R.id.TextRecording)
         val AudioName = EditTetRedordName.text.toString()
@@ -37,10 +39,10 @@ class AudioConfig (var mainActivity: Activity): AppCompatActivity() {
         RecordBtn.setOnCheckedChangeListener { _, isChecked ->
 
             if (isChecked) {
-                RecordBtn.foreground = AppCompatResources.getDrawable(mainActivity, R.drawable.pause_icon)
+                RecordBtn.foreground = AppCompatResources.getDrawable(db.BMObj.mainActivity, R.drawable.pause_icon)
                 StartRecording(AudioName) }
             else {
-                RecordBtn.foreground = AppCompatResources.getDrawable(mainActivity, R.drawable.play_arrow)
+                RecordBtn.foreground = AppCompatResources.getDrawable(db.BMObj.mainActivity, R.drawable.play_arrow)
                 StopRecording()
                 CreatePlayBackAudioBox(AudioName)
             }
@@ -48,16 +50,16 @@ class AudioConfig (var mainActivity: Activity): AppCompatActivity() {
     }
 
     fun StartRecording(FileName:String) {
-        ActivityCompat.requestPermissions(mainActivity, permissions, REQUEST_RECORD_AUDIO_PERMISSION)
+        ActivityCompat.requestPermissions(db.BMObj.mainActivity, permissions, REQUEST_RECORD_AUDIO_PERMISSION)
         if(permissionToRecordAccepted == true){
-        recorder = MediaRecorder(mainActivity).apply {
+        recorder = MediaRecorder(db.BMObj.mainActivity).apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
             setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
             setOutputFile(FileName)
             setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
 
             try { prepare() }
-            catch (e: IOException) { Toast.makeText(mainActivity, "Failed" + e.toString(), Toast.LENGTH_SHORT).show() }
+            catch (e: IOException) { Toast.makeText(db.BMObj.mainActivity, "Failed" + e.toString(), Toast.LENGTH_SHORT).show() }
             start()
              }
         }
@@ -82,35 +84,36 @@ class AudioConfig (var mainActivity: Activity): AppCompatActivity() {
 
     //Creates the play back button
     fun CreatePlayBackAudioBox(GivenfileName:String) {
-        val MainScrollBarLinearLayout = mainActivity.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout) //creates an object we can use to access the linear layout
+        val MainScrollBarLinearLayout = db.BMObj.mainActivity.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout) //creates an object we can use to access the linear layout
 
-        val playBarsHolder = LinearLayout(mainActivity)
+        val playBarsHolder = LinearLayout(db.BMObj.mainActivity)
         playBarsHolder.orientation = LinearLayout.VERTICAL
-        playBarsHolder.background =  AppCompatResources.getDrawable(mainActivity, R.color.darkGreyHeader)
+        playBarsHolder.background =  AppCompatResources.getDrawable(db.BMObj.mainActivity, R.color.darkGreyHeader)
 
-        val PlayButtonHolderText = TextView(mainActivity)
+        val PlayButtonHolderText = TextView(db.BMObj.mainActivity)
         PlayButtonHolderText.text = "" //audio name
-        PlayButtonHolderText.setTextColor(mainActivity.getColor(R.color.white))
+        PlayButtonHolderText.setTextColor(db.BMObj.mainActivity.getColor(R.color.white))
 
-        val playBars = LinearLayout(mainActivity)
+        val playBars = LinearLayout(db.BMObj.mainActivity)
         playBars.orientation = LinearLayout.HORIZONTAL //we set the linearlayout to a horizon view
-        playBars.background =  AppCompatResources.getDrawable(mainActivity,R.color.GreyBg)
+        playBars.background =  AppCompatResources.getDrawable(db.BMObj.mainActivity,R.color.GreyBg)
 
-        val playAndPauseButton = ToggleButton(mainActivity)
-        playAndPauseButton.foreground = AppCompatResources.getDrawable(mainActivity, R.drawable.play_arrow)
-        playAndPauseButton.background = AppCompatResources.getDrawable(mainActivity, R.drawable.record_shape)
+        val playAndPauseButton = ToggleButton(db.BMObj.mainActivity)
+        playAndPauseButton.foreground = AppCompatResources.getDrawable(db.BMObj.mainActivity, R.drawable.play_arrow)
+        playAndPauseButton.background = AppCompatResources.getDrawable(db.BMObj.mainActivity, R.drawable.record_shape)
 
-        val PressToPlayAudio = TextView(mainActivity)
+        val PressToPlayAudio = TextView(db.BMObj.mainActivity)
         PressToPlayAudio.text = "Play audio"
-        PressToPlayAudio.setTextColor(mainActivity.getColor(R.color.white))
+        PressToPlayAudio.setTextColor(db.BMObj.mainActivity.getColor(R.color.white))
 
         playAndPauseButton.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                playAndPauseButton.foreground = AppCompatResources.getDrawable(mainActivity,R.drawable.pause_icon)
-                fileName = "${mainActivity.externalCacheDir?.absolutePath}/" + GivenfileName + ".3gp"
+                playAndPauseButton.foreground = AppCompatResources.getDrawable(db.BMObj.mainActivity,R.drawable.pause_icon)
+                fileName = "${db.BMObj.mainActivity.externalCacheDir?.absolutePath}/" + GivenfileName + ".3gp"
+                AudioFilesLocations.add(fileName)
                 startPlaying()
             } else {
-                playAndPauseButton.foreground = AppCompatResources.getDrawable(mainActivity,R.drawable.play_arrow)
+                playAndPauseButton.foreground = AppCompatResources.getDrawable(db.BMObj.mainActivity,R.drawable.play_arrow)
                 stopPlaying()
             }
         }
@@ -127,7 +130,7 @@ class AudioConfig (var mainActivity: Activity): AppCompatActivity() {
                 setDataSource(fileName)
                 prepare()
                 start()
-            } catch (e: IOException) { Toast.makeText(mainActivity, "To be implemented", Toast.LENGTH_SHORT).show() }
+            } catch (e: IOException) { Toast.makeText(db.BMObj.mainActivity, "To be implemented", Toast.LENGTH_SHORT).show() }
         }
     }
 

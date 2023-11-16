@@ -22,12 +22,12 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat.getFont
 
 
-class TextFormatConfig(private var mainActivity: Activity) {
-    val textBox: TextView = mainActivity.findViewById<TextView>(R.id.addTextTxtView)
+class TextFormatConfig(private var db: DataBase) {
+    val textBox: TextView = db.BMObj.mainActivity.findViewById(R.id.addTextTxtView)
     var currentTextSize = 12f
-    val dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_text_edit, null)
+    val dialogView = LayoutInflater.from(db.BMObj.mainActivity).inflate(R.layout.dialog_text_edit, null)
     fun createTextFormatDialog() {
-        val scrollViewLinearLayout = mainActivity.findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
+        val scrollViewLinearLayout = db.BMObj.mainActivity.findViewById<LinearLayout>(R.id.BottomScrollViewLinearLayout)
         scrollViewLinearLayout.addView(dialogView, 0)
 
         val boldBtn = dialogView.findViewById<Button>(R.id.Boldbtn)
@@ -107,20 +107,25 @@ class TextFormatConfig(private var mainActivity: Activity) {
                 "Droid Sans" -> {}
                 "Mono" -> {}
                 "Droid Serif" -> {}
-                "Broken 15" -> { str.setSpan(getFont(mainActivity, R.font.font_broken15)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
-                "Fantasy Magist" ->  { str.setSpan(getFont(mainActivity, R.font.font_fantasy_magist)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
-                "Cheese Burger" ->   { str.setSpan(getFont(mainActivity, R.font.font_cheeseburger)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
-                "Caviar Dreams" ->   { str.setSpan(getFont(mainActivity, R.font.font_caviar_dreams)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
-                "DCC-Ash" ->   { str.setSpan(getFont(mainActivity, R.font.font_dcc_ash)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
-                "Louis George Cafe" ->  { str.setSpan(getFont(mainActivity, R.font.font_louis_george_cafe)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
-                "Next Sunday" ->  { str.setSpan(getFont(mainActivity, R.font.font_next_sunday)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
-                "Verve" ->   { str.setSpan(getFont(mainActivity, R.font.font_verve)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
+                "Broken 15" -> { str.setSpan(getFont(db.BMObj.mainActivity, R.font.font_broken15)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
+                "Fantasy Magist" ->  { str.setSpan(getFont(db.BMObj.mainActivity, R.font.font_fantasy_magist)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
+                "Cheese Burger" ->   { str.setSpan(getFont(db.BMObj.mainActivity, R.font.font_cheeseburger)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
+                "Caviar Dreams" ->   { str.setSpan(getFont(db.BMObj.mainActivity, R.font.font_caviar_dreams)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
+                "DCC-Ash" ->   { str.setSpan(getFont(db.BMObj.mainActivity, R.font.font_dcc_ash)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
+                "Louis George Cafe" ->  { str.setSpan(getFont(db.BMObj.mainActivity, R.font.font_louis_george_cafe)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
+                "Next Sunday" ->  { str.setSpan(getFont(db.BMObj.mainActivity, R.font.font_next_sunday)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
+                "Verve" ->   { str.setSpan(getFont(db.BMObj.mainActivity, R.font.font_verve)?.let { CustomTypefaceSpan("", it) }, startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
             }
                 textBox.text = str
             }
         }
     }
+    fun SetFormattedText():SpannableStringBuilder{
+        return  SpannableStringBuilder(textBox.text)
+    }
 }
+
+
 
 class CustomTypefaceSpan(family: String?, private val newType: Typeface) :
     TypefaceSpan(family) {

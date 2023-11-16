@@ -2,9 +2,12 @@ package com.example.thebasementpart3
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.Button
@@ -14,13 +17,20 @@ import android.widget.MediaController
 import android.widget.Toast
 import android.widget.VideoView
 import androidx.core.app.ActivityCompat.startActivityForResult
+import java.io.File
+import java.io.IOException
+import java.io.OutputStreamWriter
+import java.util.Vector
 
 
 class CameraConfig(private var mainActivity: Activity) {
     private val requestCameraCapture = 1
     private val requestVideoCapture = 2
+    var numberOfPictures = 0
+
     private val scrollViewLinearLayout: LinearLayout = mainActivity.findViewById(R.id.BottomScrollViewLinearLayout)
     private val textBoxLinearlayout = mainActivity.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout)
+    var dataBase:DataBase? = null
     fun createCameraDialog() {
         val dialogView =  LayoutInflater.from(mainActivity).inflate(R.layout.dialog_camera, null)
         dialogView.elevation = 2f
@@ -43,23 +53,30 @@ class CameraConfig(private var mainActivity: Activity) {
         }
     }
 
+    fun SetDB(dataBase: DataBase){
+        this.dataBase = dataBase
+    }
 fun addPicture(ImageBitmap:Bitmap){
     val imageHolder = ImageView(mainActivity)
     imageHolder.adjustViewBounds = true
     imageHolder.maxHeight= 400
     imageHolder.maxWidth= MATCH_PARENT
     imageHolder.setImageBitmap(ImageBitmap)
-
+    numberOfPictures++
+    writeToFile(ImageBitmap, null, mainActivity, "Camera", dataBase)
     imageHolder.scaleType = ImageView.ScaleType.FIT_CENTER
     textBoxLinearlayout.addView(imageHolder)
     }
 
-    fun addVideo(videoHolder: VideoView){
+    fun addVideo(uri: Uri?){
+        val videoView = VideoView(mainActivity)
+        videoView.setVideoURI(uri)
         val mediaController = MediaController(mainActivity)
-        mediaController.setAnchorView(videoHolder)
-        mediaController.setMediaPlayer(videoHolder)
-        videoHolder.setMediaController(mediaController)
-        textBoxLinearlayout.addView(videoHolder)
+        mediaController.setAnchorView(videoView)
+        mediaController.setMediaPlayer(videoView)
+        videoView.setMediaController(mediaController)
+        writeToFile(null, uri, mainActivity, "Video", dataBase)
+        textBoxLinearlayout.addView(videoView)
     }
 
 
@@ -79,7 +96,37 @@ fun addPicture(ImageBitmap:Bitmap){
             startActivityForResult(mainActivity, takeVideoIntent, requestVideoCapture, null)
             Toast.makeText(mainActivity, "Video taken Successfully", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(mainActivity, "Shit's broke", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mainActivity, "To be implemented", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun writeToFile(PictureData:Bitmap?, VideoData:Uri?,  context: Context, Type:String, dataBase: DataBase?) {
+        var basementPicture: Vector<String>? = null
+        if(Type == "camera"){
+            try {
+                var fileOutputStream = context.openFileOutput("BasementPicture$numberOfPictures.jpeg", Context.MODE_PRIVATE);
+                if (PictureData != null) { PictureData.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream) };
+                var BasementPictureFile = dataBase?.BMObj?.mainActivity?.getFileStreamPath("BasementPicture$numberOfPictures.jpeg")
+                if (basementPicture != null) {
+                    if (dataBase != null) {
+                        if (BasementPictureFile != null) { dataBase.PictureLocations?.add(BasementPictureFile.path) }
+                    }
+                }
+                fileOutputStream.close();
+            } catch (e: IOException) {
+                Log.e("Exception", "File write failed: $e")
+            }
+        }
+        else if(Type == "Video"){
+            var file = File(VideoData?.getPath().toString())
+            var BasementVideoFile = dataBase?.BMObj?.mainActivity?.getFileStreamPath(file.name)
+            if (basementPicture != null) {
+                if (dataBase != null) {
+                    if (BasementVideoFile != null) { dataBase.VideoLocations?.add(BasementVideoFile.path)
+                    }
+                }
+            }
+
+        }
     }
 }

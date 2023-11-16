@@ -30,6 +30,9 @@ class MainActivity : AppCompatActivity() {
         var baseMTObj = BasementObject(this)
         var header = NavigateHeader(baseMTObj)
         val db = DataBase(baseMTObj, header) //the database is initialized using the main context to display successes or failures
+        val getDatabase: () -> DataBase = {
+             db
+        }
 
         db.getInformationFromDatabase()
         mainLayout.setOnClickListener{ db.Configuredatabase(mainTextView) }
@@ -42,27 +45,29 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.OpenHeaderNavigation).setOnClickListener {header.startUpHeader() }
 
         var recordOn = false
-        findViewById<Button>(R.id.OpenRecordAudioDialogBtn).setOnClickListener { recordOn = callBottomLinearLayoutFunctions("RecordAudio", bottomLayout, recordOn) }
+        findViewById<Button>(R.id.OpenRecordAudioDialogBtn).setOnClickListener { recordOn = callBottomLinearLayoutFunctions("RecordAudio", bottomLayout, recordOn, db) }
 
         var cameraOn = false
-        findViewById<Button>(R.id.cameraBtn).setOnClickListener { cameraOn = callBottomLinearLayoutFunctions("Camera", bottomLayout, cameraOn)}
+        findViewById<Button>(R.id.cameraBtn).setOnClickListener { cameraOn = callBottomLinearLayoutFunctions("Camera", bottomLayout, cameraOn, db)}
 
         var textOn = false
-        findViewById<Button>(R.id.TextFormatter).setOnClickListener { textOn = callBottomLinearLayoutFunctions("TextFormatter", bottomLayout, textOn)}
+        findViewById<Button>(R.id.TextFormatter).setOnClickListener { textOn = callBottomLinearLayoutFunctions("TextFormatter", bottomLayout, textOn, db)}
 
         var gridOn = false
-        findViewById<Button>(R.id.OpenGridDialogBtn).setOnClickListener { gridOn = callBottomLinearLayoutFunctions("CreateCells", bottomLayout, gridOn)}
+        findViewById<Button>(R.id.OpenGridDialogBtn).setOnClickListener { gridOn = callBottomLinearLayoutFunctions("CreateCells", bottomLayout, gridOn, db)}
     }
 
-    private fun callBottomLinearLayoutFunctions(FunctionToCall:String, bottomLayout:LinearLayout, FeatureOn:Boolean): Boolean{
+    private fun callBottomLinearLayoutFunctions(FunctionToCall:String, bottomLayout:LinearLayout, FeatureOn:Boolean, db: DataBase): Boolean{
         var BoolReturn = false
         if(!FeatureOn){
             if(bottomLayout.childCount >= 2){ bottomLayout.removeViewAt(0) }
             when (FunctionToCall) {
-                "RecordAudio" -> { AudioConfig(this).CreateAudioDialog() }
-                "Camera" -> { CameraConfig(this).createCameraDialog() }
-                "TextFormatter" -> { TextFormatConfig(this).createTextFormatDialog() }
-                "CreateCells" -> { CreateCell(this).createGridDialog() }
+                "RecordAudio" -> { AudioConfig(db).CreateAudioDialog() }
+                "TextFormatter" -> { TextFormatConfig(db).createTextFormatDialog() }
+                "CreateCells" -> { CreateCell(db).createGridDialog() }
+                "Camera" -> { var Camera = CameraConfig(this)
+                    Camera.createCameraDialog();
+                    Camera.SetDB(db)}
             }
             this.currentFocus?.let { view ->
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
@@ -89,9 +94,7 @@ class MainActivity : AppCompatActivity() {
         else if (requestCode == requestVideoCapture && resultCode == RESULT_OK) {
             val videoUri = data?.data
             if (videoUri != null) {
-                val videoView = VideoView(this)
-                videoView.setVideoURI(intent.data)
-                camaraConfig.addVideo(videoView)
+                camaraConfig.addVideo(intent.data)
             }
             else{
                 Toast.makeText(this, "Video not loaded", Toast.LENGTH_SHORT).show()
