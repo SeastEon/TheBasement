@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
@@ -67,6 +68,18 @@ fun addPicture(ImageBitmap:Bitmap){
     imageHolder.scaleType = ImageView.ScaleType.FIT_CENTER
     textBoxLinearlayout.addView(imageHolder)
     }
+    fun addPicture(ImageFile:File){
+        var FileBitmap = BitmapFactory.decodeFile(ImageFile.path);
+        val imageHolder = ImageView(mainActivity)
+        imageHolder.adjustViewBounds = true
+        imageHolder.maxHeight= 400
+        imageHolder.maxWidth= MATCH_PARENT
+        imageHolder.setImageBitmap(FileBitmap)
+        numberOfPictures++
+        writeToFile(FileBitmap, null, mainActivity, "Camera", dataBase)
+        imageHolder.scaleType = ImageView.ScaleType.FIT_CENTER
+        textBoxLinearlayout.addView(imageHolder)
+    }
 
     fun addVideo(uri: Uri?){
         val videoView = VideoView(mainActivity)
@@ -102,15 +115,13 @@ fun addPicture(ImageBitmap:Bitmap){
 
     private fun writeToFile(PictureData:Bitmap?, VideoData:Uri?,  context: Context, Type:String, dataBase: DataBase?) {
         var basementPicture: Vector<String>? = null
-        if(Type == "camera"){
+        if(Type == "Camera"){
             try {
                 var fileOutputStream = context.openFileOutput("BasementPicture$numberOfPictures.jpeg", Context.MODE_PRIVATE);
                 if (PictureData != null) { PictureData.compress(Bitmap.CompressFormat.JPEG, 90, fileOutputStream) };
                 var BasementPictureFile = dataBase?.BMObj?.mainActivity?.getFileStreamPath("BasementPicture$numberOfPictures.jpeg")
-                if (basementPicture != null) {
-                    if (dataBase != null) {
-                        if (BasementPictureFile != null) { dataBase.basementchanges.PictureLocations?.add(BasementPictureFile.path) }
-                    }
+                if (basementPicture != null && dataBase != null && BasementPictureFile != null) {
+                        dataBase.basementchanges.PictureLocations?.add(BasementPictureFile.path)
                 }
                 fileOutputStream.close();
             } catch (e: IOException) {
@@ -120,13 +131,9 @@ fun addPicture(ImageBitmap:Bitmap){
         else if(Type == "Video"){
             var file = File(VideoData?.getPath().toString())
             var BasementVideoFile = dataBase?.BMObj?.mainActivity?.getFileStreamPath(file.name)
-            if (basementPicture != null) {
-                if (dataBase != null) {
-                    if (BasementVideoFile != null) { dataBase.basementchanges.VideoLocations?.add(BasementVideoFile.path)
-                    }
-                }
+            if (basementPicture != null && dataBase != null && BasementVideoFile != null) {
+              dataBase.basementchanges.VideoLocations?.add(BasementVideoFile.path)
             }
-
         }
     }
 }

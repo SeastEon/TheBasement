@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         val getDatabase: () -> DataBase = { db }
 
         db.getInformationFromDatabase()
+
         mainLayout.setOnClickListener{ db.Configuredatabase(mainTextView) }
 
         val exportBtn = findViewById<Button>(R.id.ExportToDataBaseBtn)

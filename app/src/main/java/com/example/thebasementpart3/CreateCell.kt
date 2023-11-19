@@ -88,33 +88,43 @@ class CreateCell(private var db: DataBase) {
         db.basementchanges.GridContents = CellsInGrid //records the grid for the database
     }
 
-    fun OnReload(GridElements :Vector<GridCapture>){
-        val scrollViewLinearLayout = db.BMObj.mainActivity.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout)
-        val screenWidth = scrollViewLinearLayout.width
-        var gridX = screenWidth / xCellValue
+    fun OnReload(GridElements :Vector<GridCapture>) {
+        for (elements in GridElements) {
+            val scrollViewLinearLayout =
+                db.BMObj.mainActivity.findViewById<LinearLayout>(R.id.BasementScrollLinearLayout)
+            val screenWidth = scrollViewLinearLayout.width
+            var gridX = screenWidth / xCellValue
 
-        val yCellLayout = LinearLayout(db.BMObj.mainActivity) //needed once
-        yCellLayout.orientation = LinearLayout.VERTICAL
-        yCellLayout.background = AppCompatResources.getDrawable(db.BMObj.mainActivity,R.color.LightGrey )
-        yCellLayout.background.alpha = 40
+            val yCellLayout = LinearLayout(db.BMObj.mainActivity) //needed once
+            yCellLayout.orientation = LinearLayout.VERTICAL
+            yCellLayout.background =
+                AppCompatResources.getDrawable(db.BMObj.mainActivity, R.color.LightGrey)
+            yCellLayout.background.alpha = 40
 
-        // creates the grid
-        for (Y in 0 until cellYSize){
-            val xCellLayout = LinearLayout(db.BMObj.mainActivity) //need multiple of these to create the frid
-            xCellLayout.orientation = LinearLayout.HORIZONTAL
-            for (X in 0 until GridElements[0].maxXval){
-                var newEditText = EditText(db.BMObj.mainActivity)
-                newEditText.width = gridX
-                newEditText.setTextColor(AppCompatResources.getColorStateList(db.BMObj.mainActivity,R.color.LightGrey ))
-                xCellLayout.addView(newEditText)
-                CellsInGrid.add(GridCapture(xCellValue, cellYSize, newEditText.text.toString()))
+            // creates the grid
+            for (Y in 0 until elements.masYVal) {
+                val xCellLayout =
+                    LinearLayout(db.BMObj.mainActivity) //need multiple of these to create the frid
+                xCellLayout.orientation = LinearLayout.HORIZONTAL
+                for (X in 0 until elements.maxXval) {
+                    var newEditText = EditText(db.BMObj.mainActivity)
+                    newEditText.width = gridX
+                    newEditText.setTextColor(
+                        AppCompatResources.getColorStateList(
+                            db.BMObj.mainActivity,
+                            R.color.LightGrey
+                        )
+                    )
+                    xCellLayout.addView(newEditText)
+                    CellsInGrid.add(GridCapture(xCellValue, cellYSize, newEditText.text.toString()))
+                }
+                yCellLayout.addView(xCellLayout)
             }
-            yCellLayout.addView(xCellLayout)
+            val spacer = Space(db.BMObj.mainActivity)
+            spacer.minimumHeight = 10
+            scrollViewLinearLayout.addView(spacer)
+            scrollViewLinearLayout.addView(yCellLayout)
         }
-        val spacer = Space(db.BMObj.mainActivity)
-        spacer.minimumHeight = 10
-        scrollViewLinearLayout.addView(spacer)
-        scrollViewLinearLayout.addView(yCellLayout)
     }
 }
 

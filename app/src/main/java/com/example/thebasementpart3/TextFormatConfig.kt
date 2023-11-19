@@ -18,6 +18,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat.getFont
+import java.util.Vector
 
 
 class TextFormatConfig(private var db: DataBase) {
@@ -129,6 +130,29 @@ class TextFormatConfig(private var db: DataBase) {
                 textBox.text = str
             }
         }
+    }
+
+    fun ReloadEditTextSelection(textChanges: Vector<StoreTextChanges>?) {
+        if (textChanges != null) {
+            for (textChanged in textChanges){
+                if(textChanged.Change == "Font"){ textChanged.ChangeParameterInString?.let { updateFontType(it) } }
+                else if( textChanged.Change == "Size"){ textChanged.ChangeParameterInString?.let { updateTextSize(it.toFloat()) } }
+                else{
+                    val startSelection: Int = textChanged.Beginning
+                    val endSelection: Int = textChanged.End
+                    val str = SpannableStringBuilder(textBox.text)
+
+                    when (textChanged.Change) {
+                        "Bold" -> { str.setSpan(StyleSpan(Typeface.BOLD), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+                        "Italic" -> { str.setSpan(StyleSpan(Typeface.ITALIC), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+                        "Underline" -> { str.setSpan(UnderlineSpan(), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+                        "StrikeThrough" -> { str.setSpan(StrikethroughSpan(), startSelection, endSelection, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)}
+                    }
+                    textBox.text = str
+                }
+            }
+        }
+
     }
 }
 

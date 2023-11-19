@@ -1,5 +1,6 @@
 package com.example.thebasementpart3
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -9,8 +10,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
+import java.io.File
 import java.util.UUID
 import java.util.Vector
+
 
 class DataBase (var BMObj:BasementObject, var NavHeader: NavigateHeader){
     var basementId = "TestBasment2"
@@ -52,6 +55,8 @@ class DataBase (var BMObj:BasementObject, var NavHeader: NavigateHeader){
             if (basement != null) {
                 if(basement.mHeaders != null &&  basement.mText != null) {
                     returnedDoc = BasementObject.BasementSection(basement.mHeaders.toString(), basement.mText.toString())
+                    basementchanges = basement.basementAugmentations!!
+                    DataReload(basementchanges)
                 }
             }
             BMObj.vectorBasementObject = DecryptData(BMObj.GetBasementVectorsWithoutDelimiter(returnedDoc))
@@ -149,6 +154,54 @@ class DataBase (var BMObj:BasementObject, var NavHeader: NavigateHeader){
         BMObj.separateBasementHeaders()
         addBasementToDatabase()
     }
+
+    fun DataReload(basementchanges:basementChanges):Basementpart{
+        var basementparts = Basementpart()
+        if(basementchanges.textChanges != null){
+            var textFormatter = TextFormatConfig(this)
+            textFormatter.ReloadEditTextSelection(basementchanges.textChanges)
+            basementparts.TextF = textFormatter
+        }
+        else if(basementchanges.GridContents != null){
+            var GridCreator = CreateCell(this)
+            GridCreator.OnReload(basementchanges.GridContents!!)
+            basementparts.GridCreator = GridCreator
+        }
+        else if(basementchanges.PictureLocations != null || basementchanges.VideoLocations != null){
+            var cameraCreator = CameraConfig(this.BMObj.mainActivity)
+            cameraCreator.createCameraDialog()
+            if(basementchanges.PictureLocations != null){
+                for (pictures in basementchanges.PictureLocations!!){
+                    var file= File(pictures)
+                    cameraCreator.addPicture(file)
+                }
+            }
+            else if(basementchanges.VideoLocations != null){
+                for (videos in basementchanges.VideoLocations!!){
+                    val videoUri = Uri.fromFile(File(videos))
+                    cameraCreator.addVideo(videoUri)
+                }
+            }
+            basementparts.cameraCreator = cameraCreator
+
+        }
+        else if(basementchanges.AudioFileLocations != null){
+            var AudioCreator = AudioConfig(this)
+            for (audios in basementchanges.AudioFileLocations!!){
+                AudioCreator.CreatePlayBackAudioBox(audios.toString())
+            }
+            basementparts.AudioCreator = AudioCreator
+        }
+        return basementparts
+    }
+
+    data class Basementpart(
+        var TextF :TextFormatConfig? = null,
+        var GridCreator:CreateCell? = null,
+        var cameraCreator:CameraConfig? = null,
+        var AudioCreator:AudioConfig? = null
+    )
+
     fun getInformationFromDatabase(){
         getBasementFromDatabase()
         if(returnedDoc.BasementHeader != ""){
